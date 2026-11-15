@@ -1,0 +1,2730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>TimeTrack Rail — Deadline-First Train Search</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Outfit:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink: #101c31;
+      --navy: #0d2039;
+      --gold: #e7b65c;
+      --teal: #1f8c7a;
+      --teal-dark: #126357;
+      --cream: #f8f5ec;
+      --muted: #65758a;
+      --panel-bg: #ffffffee;
+      --panel-text: #15273d;
+      --field-bg: #f8fafb;
+      --field-border: #d7e0e8;
+      --result-bg: #eff5f5;
+      --result-text: #34516b;
+      --safe-green: #0d8a56;
+      --safe-bg: #e6f9f0;
+      --tight-amber: #b46b02;
+      --tight-bg: #fff7e6;
+      --risky-red: #c5221f;
+      --risky-bg: #fdeeee;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      background: #f7f8f6;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    /* Hero Section */
+    .hero {
+      min-height: 820px;
+      height: 100vh;
+      max-height: 1000px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(95deg, rgba(248, 246, 236, .97) 0%, rgba(248, 246, 236, .91) 27%, rgba(247, 245, 236, .36) 52%, rgba(9, 24, 42, .18) 100%),
+                  linear-gradient(0deg, rgba(10, 27, 46, .45), transparent 34%),
+                  url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=2200&q=85') center 52%/cover;
+    }
+    .hero:after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 78% 32%, rgba(255, 213, 132, .2), transparent 36%);
+    }
+    .nav {
+      position: absolute;
+      z-index: 5;
+      top: 28px;
+      left: 5%;
+      right: 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+    }
+    .logo {
+      font-family: Outfit, sans-serif;
+      font-weight: 900;
+      font-size: 29px;
+      letter-spacing: -1.8px;
+      white-space: nowrap;
+    }
+    .logo span { color: var(--teal); }
+    .logo i { color: #c08c31; font-style: normal; }
+    .navlinks {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px;
+      background: rgba(255, 255, 255, .87);
+      border: 1px solid rgba(255, 255, 255, .7);
+      box-shadow: 0 14px 40px #0e27452a;
+      border-radius: 50px;
+      backdrop-filter: blur(20px);
+    }
+    .navlinks a {
+      font-weight: 700;
+      font-size: 13px;
+      text-decoration: none;
+      color: #34435a;
+      padding: 13px 20px;
+      border-radius: 50px;
+      transition: .25s;
+    }
+    .navlinks a:hover, .navlinks a.active {
+      background: #fff;
+      color: #0f2039;
+      box-shadow: 0 4px 15px #10233d12;
+    }
+    .nav-cta {
+      background: var(--navy);
+      color: white;
+      border: 1px solid #e5b968;
+      padding: 15px 22px;
+      border-radius: 50px;
+      font-weight: 800;
+      box-shadow: 0 12px 30px #08192c44;
+    }
+    .nav-cta:hover { transform: translateY(-2px); }
+    .hero-content {
+      position: absolute;
+      z-index: 2;
+      left: 8%;
+      top: 27%;
+      max-width: 700px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: #fffdf3d9;
+      border: 1px solid #e9cc89;
+      color: #7a5922;
+      border-radius: 50px;
+      padding: 11px 17px;
+      font-weight: 800;
+      font-size: 12px;
+      box-shadow: 0 8px 30px #ae854626;
+    }
+    .eyebrow b {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2aa98b;
+      box-shadow: 0 0 0 4px #2aa98b24;
+    }
+    .hero h1 {
+      font-family: Outfit, sans-serif;
+      font-weight: 900;
+      font-size: clamp(52px, 6vw, 100px);
+      letter-spacing: -4px;
+      line-height: .98;
+      margin: 24px 0 18px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(115deg, #136c6b, #2e9c89, #c59439);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 1.5vw, 21px);
+      line-height: 1.6;
+      color: #3d4b5d;
+      max-width: 540px;
+      font-weight: 500;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    .btn {
+      border: 0;
+      border-radius: 15px;
+      padding: 18px 25px;
+      font-weight: 800;
+      transition: transform .25s, box-shadow .25s;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px #0a1d3438;
+    }
+    .btn-primary {
+      background: linear-gradient(125deg, #10223e, #183b5c);
+      color: white;
+      border: 1px solid #e8b45b;
+      box-shadow: 0 12px 26px #0c25403d;
+    }
+    .btn-light {
+      background: #ffffffd9;
+      color: #13253b;
+      border: 1px solid #d8b56c;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    .hero-stats strong {
+      font-family: Outfit;
+      font-size: 26px;
+      display: block;
+    }
+    .hero-stats small {
+      font-size: 12px;
+      font-weight: 700;
+      color: #627084;
+    }
+    .hero-stats > div + div {
+      border-left: 1px solid #a9acac;
+      padding-left: 30px;
+    }
+    .train-tag {
+      position: absolute;
+      z-index: 3;
+      right: 7%;
+      bottom: 18%;
+      background: #fffffff0;
+      border: 1px solid #ffffff;
+      backdrop-filter: blur(20px);
+      border-radius: 18px;
+      padding: 18px 23px;
+      box-shadow: 0 20px 55px #071a3540;
+      animation: float 5s ease-in-out infinite;
+    }
+    .train-tag strong { display: block; font-size: 14px; }
+    .train-tag span { font-size: 12px; color: #65758a; }
+    .train-tag .dot {
+      display: inline-block;
+      background: #24aa7d;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .goldline {
+      height: 5px;
+      background: linear-gradient(90deg, #c28b36, #ffe2a2, #1b927f, #e3b566);
+    }
+
+    /* Features Section */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 90px 24px;
+    }
+    .section-head {
+      text-align: center;
+      margin-bottom: 38px;
+    }
+    .section-head p {
+      color: #b48334;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .section-head h2 {
+      font-family: Outfit;
+      font-size: clamp(34px, 4vw, 53px);
+      letter-spacing: -2px;
+      margin: 10px;
+    }
+    .section-head span { color: #708096; }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    .feature {
+      background: #fff;
+      border: 1px solid #e8e8e5;
+      border-radius: 24px;
+      padding: 27px;
+      box-shadow: 0 14px 35px #1327410a;
+      transition: .35s;
+    }
+    .feature:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 50px #183b5b20;
+    }
+    .feature .symbol {
+      font-size: 27px;
+      background: #e8f4f0;
+      display: grid;
+      place-items: center;
+      width: 57px;
+      height: 57px;
+      border-radius: 16px;
+    }
+    .feature:nth-child(2) .symbol { background: #fff2d9; }
+    .feature:nth-child(3) .symbol { background: #e8edff; }
+    .feature:nth-child(4) .symbol { background: #f1eaff; }
+    .feature h3 { font-family: Outfit; font-size: 20px; }
+    .feature p { color: #728096; font-size: 14px; line-height: 1.7; }
+
+    /* Workspace / Planner Section */
+    .workspace {
+      background: linear-gradient(135deg, #0b2036, #122f45);
+      padding: 90px 24px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .workspace:before {
+      content: '';
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: #1f9d8c15;
+      filter: blur(25px);
+      top: -400px;
+      right: -150px;
+    }
+    .workspace-inner {
+      max-width: 1200px;
+      margin: auto;
+      position: relative;
+    }
+    .workspace .section-head span { color: #a7bccd; }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .tab {
+      border: 1px solid #ffffff25;
+      background: #ffffff0b;
+      color: #d6e3f0;
+      padding: 13px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      transition: .2s;
+    }
+    .tab:hover {
+      background: #ffffff1f;
+      color: #fff;
+    }
+    .tab.active {
+      background: linear-gradient(125deg, #d8a54d, #f2d38b);
+      color: #15263b;
+      border-color: #eed695;
+    }
+    .panel {
+      display: none;
+      max-width: 940px;
+      margin: 0 auto;
+      background: var(--panel-bg);
+      color: var(--panel-text);
+      border-radius: 28px;
+      padding: 34px;
+      box-shadow: 0 30px 80px #0005;
+    }
+    .panel.active { display: block; }
+    .panel h3 { font-family: Outfit; font-size: 26px; margin: 0 0 10px; }
+    .panel p.note { color: #6b7b90; font-size: 14px; margin-top: 0; }
+
+    /* Form & Fields */
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .field label {
+      display: block;
+      font-weight: 800;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+    .field input, .field select {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid var(--field-border);
+      background: var(--field-bg);
+      color: var(--panel-text);
+      outline: none;
+      font-size: 14px;
+    }
+    .field input:focus, .field select:focus {
+      border-color: #23a28a;
+      box-shadow: 0 0 0 4px #2fae9322;
+    }
+    .wide { grid-column: 1/-1; }
+    .submit {
+      margin-top: 23px;
+      background: linear-gradient(120deg, #132b45, #216f74);
+      color: #fff;
+      border: 0;
+      padding: 16px 28px;
+      border-radius: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: .2s;
+    }
+    .submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px #112d4533;
+    }
+    .small-btn {
+      border: 0;
+      border-radius: 9px;
+      background: #e7f2f0;
+      color: #156c60;
+      padding: 9px 14px;
+      font-weight: 800;
+      transition: .2s;
+    }
+    .small-btn:hover {
+      background: #d3ebe7;
+    }
+
+    /* Demo Preset Chips */
+    .demo-chips-wrap {
+      margin-bottom: 20px;
+      padding: 14px 18px;
+      background: #fdfaf2;
+      border: 1px dashed #d9b870;
+      border-radius: 16px;
+    }
+    .demo-chips-title {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #926b1b;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .demo-chips-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .demo-chip-btn {
+      background: #fff;
+      border: 1px solid #e1c88a;
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #4f3b14;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: .2s;
+    }
+    .demo-chip-btn:hover {
+      background: #fdf2d5;
+      border-color: #b78c33;
+      transform: translateY(-2px);
+    }
+    .demo-chip-btn.primary-chip {
+      background: linear-gradient(120deg, #fff7e4, #fff0cb);
+      border: 1.5px solid #d59f33;
+      font-weight: 800;
+      color: #634305;
+      box-shadow: 0 3px 8px #9c71181f;
+    }
+
+    /* Results Container & AI Banner */
+    .results-wrap {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .ai-banner {
+      background: linear-gradient(135deg, #f0fdf9, #f7fafc);
+      border: 1.5px solid #2bb197;
+      border-radius: 18px;
+      padding: 20px 24px;
+      box-shadow: 0 10px 25px #158b7612;
+      position: relative;
+    }
+    .ai-banner-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .ai-banner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 800;
+      font-size: 12.5px;
+      color: #0d6356;
+      background: #dbf4ee;
+      padding: 5px 12px;
+      border-radius: 30px;
+    }
+    .ai-banner-filter-tag {
+      font-size: 12px;
+      font-weight: 700;
+      color: #943a37;
+      background: #fde8e8;
+      padding: 5px 12px;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .ai-banner-text {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #17364b;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    /* Train Result Cards */
+    .train-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .train-card {
+      background: #ffffff;
+      border: 1.5px solid #e1e7ec;
+      border-radius: 18px;
+      padding: 22px 24px;
+      box-shadow: 0 8px 24px #0b20390a;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .train-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px #0b203914;
+    }
+    .train-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .train-card-info h4 {
+      font-family: Outfit;
+      font-size: 20px;
+      margin: 0 0 4px;
+      color: #0e243d;
+    }
+    .train-card-meta {
+      font-size: 12.5px;
+      color: #63758a;
+      font-weight: 600;
+    }
+    .risk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      white-space: nowrap;
+    }
+    .risk-badge.badge-Safe {
+      background: var(--safe-bg);
+      color: var(--safe-green);
+      border: 1px solid #7edfb4;
+    }
+    .risk-badge.badge-Tight {
+      background: var(--tight-bg);
+      color: var(--tight-amber);
+      border: 1px solid #f2ca7d;
+    }
+    .risk-badge.badge-Risky {
+      background: var(--risky-bg);
+      color: var(--risky-red);
+      border: 1px solid #f7a8a8;
+    }
+
+    /* Timeline breakdown visual */
+    .timeline-bar {
+      background: #f7f9fa;
+      border: 1px solid #e8edf2;
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .timeline-step small {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #7b8e9f;
+      letter-spacing: .5px;
+    }
+    .timeline-step strong {
+      font-size: 16px;
+      color: #112842;
+    }
+    .timeline-arrow {
+      color: #a4b4c4;
+      font-weight: 900;
+      font-size: 16px;
+    }
+    .timeline-step.venue-step strong {
+      color: #166e5f;
+    }
+
+    /* Expandable stops details */
+    .stops-details {
+      margin-top: 12px;
+      border: 1px solid #e5ecf0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      background: #fafbfc;
+    }
+    .stops-details summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
+      color: #245774;
+      outline: none;
+      user-select: none;
+    }
+    .stops-details[open] summary {
+      margin-bottom: 12px;
+    }
+    .stops-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+    .stops-table th {
+      padding: 8px 10px;
+      background: #eef3f6;
+      font-weight: 800;
+      color: #3b5066;
+      border-bottom: 1px solid #d8e2e8;
+    }
+    .stops-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #edf1f4;
+      color: #1d334a;
+    }
+    .stops-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    /* Action buttons on card */
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-irctc {
+      background: #e9f5f2;
+      color: #126b5d;
+      border: 1px solid #8fd1c4;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 800;
+      font-size: 13px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: .2s;
+    }
+    .btn-irctc:hover {
+      background: #d4ece7;
+      transform: translateY(-2px);
+    }
+    .btn-demo-book {
+      background: linear-gradient(120deg, #10243d, #194660);
+      color: #ffffff;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 800;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: .2s;
+    }
+    .btn-demo-book:hover {
+      background: linear-gradient(120deg, #16365c, #215c7e);
+      transform: translateY(-2px);
+    }
+
+    /* Live status display card */
+    .live-status-card {
+      background: #ffffff;
+      border: 1px solid #dbe3ea;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 18px;
+    }
+    .live-status-card h4 {
+      margin: 0 0 6px;
+      font-family: Outfit;
+      font-size: 20px;
+      color: #0f233a;
+    }
+    .live-status-route {
+      font-size: 13px;
+      color: #55677d;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    /* Autocomplete & Swap */
+    .station-wrap { position: relative; }
+    .station-list {
+      position: absolute;
+      top: calc(100% + 5px);
+      left: 0;
+      right: 0;
+      max-height: 250px;
+      overflow-y: auto;
+      z-index: 80;
+      background: #fff;
+      color: #15273d;
+      border: 1px solid #c9d7e3;
+      border-radius: 14px;
+      box-shadow: 0 18px 35px #07192b44;
+      padding: 5px;
+    }
+    .station-choice {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      color: inherit;
+      border-radius: 9px;
+      padding: 11px 12px;
+      font-weight: 700;
+    }
+    .station-choice:hover, .station-choice.active {
+      background: #dff4ee;
+      color: #123e3a;
+    }
+    .station-choice small { font-size: 11px; opacity: .7; font-weight: 600; }
+    .station-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 5px;
+    }
+    .swap-btn {
+      border: 1px solid #8ab9b1;
+      border-radius: 10px;
+      background: #e4f5ef;
+      color: #12645c;
+      font-weight: 800;
+      padding: 9px 12px;
+      transition: .2s;
+    }
+    .swap-btn:hover {
+      transform: rotate(-4deg) translateY(-2px);
+      background: #bdeadd;
+    }
+    .time-controls { display: flex; gap: 8px; }
+    .time-controls select {
+      min-width: 0;
+      flex: 1;
+      padding: 14px 8px;
+      border: 1px solid var(--field-border);
+      border-radius: 12px;
+      background: var(--field-bg);
+      color: var(--panel-text);
+      font: inherit;
+    }
+    .time-controls select:last-child {
+      flex: .9;
+      font-weight: 800;
+      color: #168977;
+    }
+
+    /* Gemini Assistant */
+    .ai-chat {
+      height: 340px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #edf7f5, #f7f9fd);
+      border: 1px solid #d8e8e8;
+      margin-top: 18px;
+    }
+    .ai-bubble {
+      max-width: 88%;
+      padding: 13px 17px;
+      border-radius: 17px;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+    .ai-bot {
+      align-self: flex-start;
+      background: #fff;
+      color: #163149;
+      border: 1px solid #dce6ed;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 5px 15px #0000000b;
+    }
+    .ai-user {
+      align-self: flex-end;
+      background: linear-gradient(120deg, #143c54, #238e81);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .ai-chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .ai-form { margin-top: 18px; }
+    .ai-label {
+      display: block;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .ai-input-row { display: flex; gap: 10px; }
+    .ai-input-row input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid #d7e0e8;
+      background: #f8fafb;
+      color: #162c45;
+      border-radius: 12px;
+      padding: 15px;
+    }
+    .ai-input-row .submit { margin: 0; }
+
+    /* Account & Booking */
+    .account-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+    .history-item {
+      padding: 15px 0;
+      border-bottom: 1px solid #e4eaf0;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: center;
+    }
+    .result {
+      margin-top: 20px;
+      background: var(--result-bg);
+      color: var(--result-text);
+      padding: 16px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      min-height: 50px;
+    }
+    .foot {
+      background: #071729;
+      color: #a4b3c5;
+      padding: 36px 6%;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .foot strong { color: white; }
+    .foot small { max-width: 560px; line-height: 1.6; }
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .7s, transform .7s;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    @keyframes float { 50% { transform: translateY(-14px); } }
+
+    /* Theme Toggle & Dark Theme */
+    .theme-toggle {
+      position: fixed;
+      z-index: 100;
+      right: 20px;
+      bottom: 20px;
+      border: 1px solid #e5b968;
+      border-radius: 999px;
+      background: linear-gradient(125deg, #112943, #1c6b71);
+      color: #fff;
+      padding: 14px 18px;
+      font-weight: 800;
+      box-shadow: 0 12px 32px #061a3190;
+      transition: transform .2s;
+    }
+    .theme-toggle:hover { transform: translateY(-4px) scale(1.03); }
+
+    body.dark-theme {
+      background: #081321;
+      color: #e9f1fc;
+      --panel-bg: #14243af5;
+      --panel-text: #eaf2ff;
+      --field-bg: #0c1a2c;
+      --field-border: #34516b;
+      --result-bg: #0b1d31;
+      --result-text: #c5d9eb;
+    }
+    body.dark-theme .section { color: #eaf2ff; }
+    body.dark-theme .feature { background: #15263d; border-color: #35516d; color: #eaf2ff; }
+    body.dark-theme .feature p, body.dark-theme .section-head span { color: #a9c2d9; }
+    body.dark-theme .panel { background: var(--panel-bg); color: var(--panel-text); }
+    body.dark-theme .panel p.note { color: #b1c6db; }
+    body.dark-theme .field input, body.dark-theme .field select { background: var(--field-bg); border-color: var(--field-border); color: var(--panel-text); }
+    body.dark-theme .result { background: var(--result-bg); color: var(--result-text); }
+    body.dark-theme .history-item { border-color: #35516d; }
+    body.dark-theme .small-btn { background: #1b4c56; color: #c6fff3; }
+    body.dark-theme .navlinks { background: #122b40e8; border-color: #436075; }
+    body.dark-theme .navlinks a { color: #e6f3fc; }
+    body.dark-theme .navlinks a:hover, body.dark-theme .navlinks a.active { background: #24445b; color: white; }
+    body.dark-theme .train-card { background: #112238; border-color: #264361; }
+    body.dark-theme .train-card-info h4 { color: #f0f7ff; }
+    body.dark-theme .timeline-bar { background: #0c1c2e; border-color: #203c58; }
+    body.dark-theme .timeline-step strong { color: #f0f7ff; }
+    body.dark-theme .timeline-step.venue-step strong { color: #5ee4cc; }
+    body.dark-theme .stops-details { background: #0e1e31; border-color: #23405c; }
+    body.dark-theme .stops-details summary { color: #64bbd9; }
+    body.dark-theme .stops-table th { background: #182f49; color: #d6e8f7; border-color: #2d4f71; }
+    body.dark-theme .stops-table td { color: #d6e8f7; border-color: #23405c; }
+    body.dark-theme .ai-banner { background: #0e2b34; border-color: #229984; }
+    body.dark-theme .ai-banner-text { color: #e6f6f4; }
+    body.dark-theme .ai-banner-badge { background: #184c45; color: #72fedc; }
+    body.dark-theme .ai-banner-filter-tag { background: #4a2121; color: #ffb1b1; }
+    body.dark-theme .demo-chips-wrap { background: #15263d; border-color: #695222; }
+    body.dark-theme .demo-chip-btn { background: #1d334e; border-color: #55441d; color: #e7d8b5; }
+    body.dark-theme .demo-chip-btn.primary-chip { background: linear-gradient(120deg, #2b3a36, #3b371b); border-color: #bfa044; color: #fce8a8; }
+    body.dark-theme .live-status-card { background: #12243a; border-color: #284768; }
+    body.dark-theme .live-status-card h4 { color: #f0f7ff; }
+    body.dark-theme .btn-irctc { background: #154546; color: #87fae5; border-color: #25786b; }
+    body.dark-theme .station-list { background: #14283f; color: #f2f7ff; border-color: #4b6b85; }
+    body.dark-theme .station-choice:hover, body.dark-theme .station-choice.active { background: #265b61; color: white; }
+
+    /* EVALUATOR / JUDGE BAR */
+    .evaluator-bar {
+      background: linear-gradient(90deg, #091728, #0e2942, #103240);
+      color: #f3f7fa;
+      padding: 10px 4%;
+      border-bottom: 2px solid #e5b968;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .evaluator-bar-inner {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .evaluator-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .evaluator-badge {
+      background: linear-gradient(125deg, #dfa94b, #f3d489);
+      color: #0b1a2b;
+      font-weight: 900;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .evaluator-quick-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .eval-chip {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #e2edf7;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .eval-chip:hover {
+      background: #25796b;
+      border-color: #4fe1c6;
+      color: white;
+      transform: translateY(-1px);
+    }
+    .eval-chip.active-chip {
+      background: linear-gradient(120deg, #187163, #229984);
+      border-color: #7ef2da;
+      color: white;
+      box-shadow: 0 2px 8px rgba(34, 153, 132, 0.4);
+    }
+    .eval-chip.usp-chip {
+      background: rgba(229, 185, 104, 0.15);
+      border-color: #e5b968;
+      color: #f7d591;
+    }
+    .eval-chip.usp-chip:hover {
+      background: #e5b968;
+      color: #0e1e30;
+    }
+
+    /* USP SECTION */
+    .usp-section {
+      max-width: 1200px;
+      margin: 60px auto 0;
+      padding: 0 24px;
+    }
+    .usp-header {
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto 36px;
+    }
+    .usp-pill {
+      display: inline-block;
+      background: #fdf2d5;
+      border: 1px solid #dcb560;
+      color: #8c6316;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 30px;
+      margin-bottom: 12px;
+    }
+    .usp-header h2 {
+      font-family: Outfit, sans-serif;
+      font-size: clamp(30px, 3.5vw, 44px);
+      margin: 6px 0 12px;
+      letter-spacing: -1.5px;
+      line-height: 1.15;
+    }
+    .usp-header p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .usp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .usp-card {
+      border-radius: 24px;
+      padding: 32px 28px;
+      box-shadow: 0 12px 36px rgba(12, 34, 58, 0.06);
+      position: relative;
+      transition: transform .3s;
+    }
+    .usp-card:hover {
+      transform: translateY(-4px);
+    }
+    .usp-flawed {
+      background: #fffafa;
+      border: 1.5px solid #fad2d2;
+    }
+    .usp-winner {
+      background: linear-gradient(135deg, #f0fcf9, #f7fafc);
+      border: 2px solid #209985;
+      box-shadow: 0 14px 40px rgba(32, 153, 133, 0.12);
+    }
+    .usp-badge-fail {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fee7e7;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+      border-radius: 30px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .usp-badge-win {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #d4f7ee;
+      color: #0b6858;
+      border: 1px solid #6ee7b7;
+      border-radius: 30px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+    .usp-card h3 {
+      font-family: Outfit, sans-serif;
+      font-size: 22px;
+      margin: 0 0 16px;
+    }
+    .usp-list {
+      margin: 0;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #3b4e63;
+    }
+    .usp-flawed .usp-list li::marker { color: #dc2626; font-weight: bold; }
+    .usp-winner .usp-list li::marker { color: #059669; font-weight: bold; }
+
+    /* BUFFER HEALTH METER */
+    .buffer-meter-wrap {
+      background: #f7f9fa;
+      border: 1px solid #e6edf2;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 14px 0;
+    }
+    .buffer-meter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      margin-bottom: 8px;
+    }
+    .buffer-meter-title {
+      font-weight: 700;
+      color: #213b56;
+    }
+    .buffer-meter-status {
+      font-weight: 800;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+    .status-Safe { background: #d7f7eb; color: #087a4c; }
+    .status-Tight { background: #fef3d6; color: #a16207; }
+    .status-Risky { background: #fee2e2; color: #b91c1c; }
+    .buffer-meter-track {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    .buffer-meter-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width .6s ease-in-out;
+    }
+    .fill-Safe { background: linear-gradient(90deg, #10b981, #059669); }
+    .fill-Tight { background: linear-gradient(90deg, #f59e0b, #d97706); }
+    .fill-Risky { background: linear-gradient(90deg, #ef4444, #dc2626); }
+    .buffer-meter-markers {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #8397a9;
+      margin-top: 5px;
+      font-weight: 600;
+    }
+
+    /* ROUTE STEPPER */
+    .route-stepper {
+      margin: 14px 0 16px;
+      padding: 12px;
+      background: #ffffff;
+      border: 1px dashed #cbdce8;
+      border-radius: 12px;
+      overflow-x: auto;
+    }
+    .route-stepper-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #55728f;
+      margin-bottom: 10px;
+    }
+    .stepper-nodes {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: max-content;
+      padding: 4px 6px;
+    }
+    .stepper-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    .node-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 0 2px #94a3b8;
+      margin-bottom: 6px;
+      transition: .2s;
+    }
+    .node-start .node-dot {
+      background: #10b981;
+      box-shadow: 0 0 0 3px #a7f3d0;
+    }
+    .node-end .node-dot {
+      background: #e5b968;
+      box-shadow: 0 0 0 3px #fde68a;
+    }
+    .node-station {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1e293b;
+      max-width: 90px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .node-time {
+      font-size: 10px;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    /* COPY ITINERARY & TOAST */
+    .btn-copy-itinerary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: .2s;
+    }
+    .btn-copy-itinerary:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+      transform: translateY(-2px);
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f1f33;
+      color: #ffffff;
+      border: 1.5px solid #e5b968;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: opacity .3s, transform .3s;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* DARK THEME ADAPTATION */
+    body.dark-theme .evaluator-bar { background: #060e18; border-color: #d19f43; }
+    body.dark-theme .usp-card.usp-flawed { background: #1a1619; border-color: #5c2c2c; }
+    body.dark-theme .usp-card.usp-winner { background: #0b1f26; border-color: #1f9480; }
+    body.dark-theme .usp-header h2 { color: #f1f7ff; }
+    body.dark-theme .usp-header p { color: #a2b7cc; }
+    body.dark-theme .usp-card h3 { color: #f1f7ff; }
+    body.dark-theme .usp-list { color: #c4d7e9; }
+    body.dark-theme .buffer-meter-wrap { background: #0b1c2e; border-color: #1e3954; }
+    body.dark-theme .buffer-meter-title { color: #e1edf7; }
+    body.dark-theme .route-stepper { background: #0c1c2e; border-color: #234567; }
+    body.dark-theme .node-station { color: #dbeafe; }
+    body.dark-theme .btn-copy-itinerary { background: #13273e; color: #cbd5e1; border-color: #274567; }
+    body.dark-theme .btn-copy-itinerary:hover { background: #1c3654; color: #ffffff; }
+
+    @media(max-width: 1000px) {
+      .navlinks { display: none; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-content { left: 6%; top: 25%; }
+      .hero h1 { letter-spacing: -3px; }
+      .train-tag { right: 5%; bottom: 8%; }
+    }
+    @media(max-width: 620px) {
+      .hero { min-height: 720px; height: 92vh; background-position: 60% center; }
+      .hero-content { top: 22%; left: 6%; right: 6%; }
+      .hero h1 { font-size: 52px; }
+      .hero-sub { font-size: 15px; }
+      .hero-stats { gap: 12px; }
+      .hero-stats > div + div { padding-left: 12px; }
+      .hero-stats strong { font-size: 20px; }
+      .train-tag { display: none; }
+      .feature-grid, .fields { grid-template-columns: 1fr; }
+      .panel { padding: 22px; }
+      .section { padding: 65px 18px; }
+      .nav { top: 18px; }
+      .nav-cta { padding: 12px 15px; font-size: 12px; }
+      .logo { font-size: 25px; }
+      .timeline-bar { flex-direction: column; align-items: flex-start; }
+      .timeline-arrow { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ROUND 2 EVALUATOR MODE BAR -->
+  <div class="evaluator-bar">
+    <div class="evaluator-bar-inner">
+      <div class="evaluator-title">
+        <span class="evaluator-badge">Round 2 Evaluator Bar</span>
+        <span><b>FirstCommit '26 Hackathon:</b> Live Deadline-First Train Search</span>
+      </div>
+      <div class="evaluator-quick-chips">
+        <button type="button" onclick="applyPitchPreset()" class="eval-chip active-chip">🎯 1-Click Pitch: Pune &rarr; CSMT (12 PM, 45m)</button>
+        <button type="button" onclick="applyQuickPreset('New Delhi (NDLS)', 'Kanpur Central (CNB)', '12:00', 40)" class="eval-chip">📍 Delhi &rarr; Kanpur</button>
+        <button type="button" onclick="applyQuickPreset('Patna Jn (PNBE)', 'New Delhi (NDLS)', '09:00', 60)" class="eval-chip">📍 Patna &rarr; Delhi</button>
+        <button type="button" onclick="applyQuickPreset('Howrah Jn (HWH)', 'Bhubaneswar (BBS)', '14:00', 40)" class="eval-chip">📍 Howrah &rarr; BBS</button>
+        <button type="button" onclick="document.getElementById('uspSection').scrollIntoView({behavior:'smooth'})" class="eval-chip usp-chip">💡 Compare USP</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <nav class="nav">
+      <div class="logo">TimeTrack<i>✦</i><span>Rail</span></div>
+      <div class="navlinks">
+        <a class="active" href="#home">Home</a>
+        <a href="#features">Why TimeTrack Rail</a>
+        <a href="#planner">Deadline Planner</a>
+        <a href="#account">My Account</a>
+      </div>
+      <button class="nav-cta" onclick="showTab('pnr')">🎫 Check PNR ↗</button>
+    </nav>
+    <div class="hero-content">
+      <div class="eyebrow"><b></b> DEADLINE-FIRST TRAIN DISCOVERY • FIRSTCOMMIT '26 ROUND 2</div>
+      <h1>Arrive before<br/><em>it matters.</em></h1>
+      <div class="hero-sub">Plan train journeys around your venue deadline instead of departure times. Perfect for exam candidates, interviewees, and patients.</div>
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="showTab('plan')">Plan by Deadline <span>↗</span></button>
+        <button class="btn btn-light" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Why TimeTrack Rail →</button>
+      </div>
+      <div class="hero-stats">
+        <div><strong>01</strong><small>Venue Deadline</small></div>
+        <div><strong>02</strong><small>Station-to-Venue Time</small></div>
+        <div><strong>03</strong><small>Guaranteed Buffer</small></div>
+      </div>
+    </div>
+    <div class="train-tag">
+      <strong><span class="dot"></span>Deadline-First Engine Active</strong>
+      <span>Filters late trains • Ranks by spare minutes</span>
+    </div>
+  </section>
+
+  <div class="goldline"></div>
+
+  <!-- USP SECTION -->
+  <section class="usp-section" id="uspSection">
+    <div class="usp-header reveal">
+      <span class="usp-pill">OUR CORE INNOVATION &amp; USP</span>
+      <h2>Forward Departure Search vs. Backward Deadline Discovery</h2>
+      <p>Indian Railways carries 23 million daily passengers. When travelling for exams, job interviews, or medical appointments, departure time doesn't matter — reaching on time does.</p>
+    </div>
+    <div class="usp-grid">
+      <div class="usp-card usp-flawed reveal">
+        <div class="usp-badge-fail">❌ Traditional IRCTC Flow</div>
+        <h3>Search by Departure Time (Forward)</h3>
+        <ul class="usp-list">
+          <li><b>Departure-centric:</b> User specifies departure date and searches blindly forward.</li>
+          <li><b>Manual verification:</b> Shows 10+ trains leaving throughout the day, forcing passengers to open each schedule one by one.</li>
+          <li><b>Mental arithmetic:</b> Passengers have to manually calculate transit time from station to examination hall or interview venue.</li>
+          <li><b>Critical hazard:</b> Evening trains arriving after the commitment are shown anyway; one calculation slip = missed career opportunity.</li>
+        </ul>
+      </div>
+      <div class="usp-card usp-winner reveal">
+        <div class="usp-badge-win">✅ TimeTrack Rail Flow (Our USP)</div>
+        <h3>Search Backwards from Venue Deadline</h3>
+        <ul class="usp-list">
+          <li><b>Deadline-first:</b> User enters <b>12:00 PM Venue Deadline</b> &amp; <b>45m Station-to-Venue Time</b>.</li>
+          <li><b>Automated Backward Math:</b> Engine determines the train must reach CSMT by <b>11:15 AM</b> at latest.</li>
+          <li><b>Late Train Rejection:</b> Evening trains (19:05, 21:05, 21:55) are <b>automatically filtered out</b>.</li>
+          <li><b>Color-Coded Buffer:</b> Highlights <b>11010 Sinhagad (Safe • 80m spare)</b> &amp; <b>12124 Deccan Queen (Tight • 50m spare)</b>.</li>
+          <li><b>AI Synthesis:</b> Google Gemini explains the best buffer in clear, natural language with direct IRCTC booking.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="section-head reveal">
+      <p>ROUND 2 EVALUATION TARGET</p>
+      <h2>Built around hard deadlines</h2>
+      <span>Because arriving on time is not negotiable.</span>
+    </div>
+    <div class="feature-grid">
+      <div class="feature reveal">
+        <div class="symbol">🎯</div>
+        <h3>Deadline-First Search</h3>
+        <p>Enter your venue deadline and transit time. Late trains are automatically filtered out before you even see them.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="symbol">🛡️</div>
+        <h3>Spare Buffer Tagging</h3>
+        <p>Every train is color-tagged as <b>Safe</b> (&ge;60m), <b>Tight</b> (30&ndash;59m), or <b>Risky</b> (0&ndash;29m) spare minutes.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="symbol">✨</div>
+        <h3>Gemini AI Advice</h3>
+        <p>Google Gemini synthesizes timetable options and explains the top arrival buffer in plain, concise English.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="symbol">🎫</div>
+        <h3>IRCTC Integration</h3>
+        <p>Direct 1-click IRCTC booking redirect alongside route-level stop timetables and demo simulation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKSPACE & PLANNER -->
+  <section class="workspace" id="planner">
+    <div class="workspace-inner">
+      <div class="section-head">
+        <p>THE TIMETRACK RAIL EXPERIENCE</p>
+        <h2>Find the right train, right on time</h2>
+        <span>Search backwards from when you need to be there.</span>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="plan" onclick="showTab('plan')">🚆 Deadline Planner</button>
+        <button class="tab" data-tab="status" onclick="showTab('status')">📍 Live Train Status</button>
+        <button class="tab" data-tab="pnr" onclick="showTab('pnr')">🎫 Check PNR</button>
+        <button class="tab" data-tab="account" onclick="showTab('account')">👤 My Account</button>
+        <button class="tab" data-tab="ai" onclick="showTab('ai')">✨ Gemini AI</button>
+        <button class="tab" data-tab="booking" onclick="showTab('booking')">🎟️ Demo Booking</button>
+        <button class="tab" data-tab="history" onclick="showTab('history')">🗂️ My Journeys</button>
+      </div>
+
+      <!-- PANEL: PLANNER -->
+      <div class="panel active" id="panel-plan">
+        <h3>Plan around your deadline</h3>
+        <p class="note">Enter your destination station, your final venue arrival deadline, and transit time from station to venue.</p>
+
+        <!-- QUICK-FILL DEMO PRESETS -->
+        <div class="demo-chips-wrap">
+          <div class="demo-chips-title">⚡ Quick-Fill Pitch Scenarios (1-Click Judge Demo)</div>
+          <div class="demo-chips-list">
+            <button type="button" class="demo-chip-btn primary-chip" id="btnDemoPreset" onclick="applyPitchPreset()">
+              🎯 Try Demo: Pune &rarr; Mumbai CSMT (12:00 PM Deadline, 45m to venue)
+            </button>
+            <button type="button" class="demo-chip-btn" onclick="applyQuickPreset('New Delhi (NDLS)', 'Kanpur Central (CNB)', '12:00', 40)">
+              📍 Delhi &rarr; Kanpur (12:00 PM, 40m)
+            </button>
+            <button type="button" class="demo-chip-btn" onclick="applyQuickPreset('KSR Bengaluru (SBC)', 'MGR Chennai Central (MAS)', '13:00', 45)">
+              📍 Bengaluru &rarr; Chennai (01:00 PM, 45m)
+            </button>
+            <button type="button" class="demo-chip-btn" onclick="applyQuickPreset('Patna Jn (PNBE)', 'New Delhi (NDLS)', '09:00', 60)">
+              📍 Patna &rarr; Delhi (09:00 AM, 60m)
+            </button>
+          </div>
+        </div>
+
+        <form id="plannerForm">
+          <div class="fields">
+            <div class="field">
+              <label>From Station</label>
+              <div class="station-wrap">
+                <input autocomplete="off" id="source" placeholder="e.g. Pune Jn (PUNE)" required/>
+                <div class="station-list" hidden="" id="source-suggestions" role="listbox"></div>
+              </div>
+            </div>
+            <div class="field">
+              <label>To Station</label>
+              <div class="station-wrap">
+                <input autocomplete="off" id="destination" placeholder="e.g. Mumbai CSMT (CSMT)" required/>
+                <div class="station-list" hidden="" id="destination-suggestions" role="listbox"></div>
+              </div>
+            </div>
+            <div class="station-actions wide">
+              <button class="swap-btn" id="swapStations" type="button">⇄ Swap From / To Stations</button>
+            </div>
+            <div class="field">
+              <label>Journey Date</label>
+              <input id="journey_date" required="" type="date"/>
+            </div>
+            <div class="field">
+              <label>Hard Venue Deadline (Arrive By)</label>
+              <input id="deadline" required="" type="hidden" value="12:00"/>
+              <div class="time-controls">
+                <select aria-label="Hour" id="hour12">
+                  <option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option>
+                  <option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option>
+                  <option value="9">09</option><option value="10">10</option><option value="11">11</option><option selected="selected" value="12">12</option>
+                </select>
+                <select aria-label="Minute" id="minute12">
+                  <option selected="selected" value="00">00</option>
+                  <option value="05">05</option><option value="10">10</option><option value="15">15</option><option value="20">20</option>
+                  <option value="25">25</option><option value="30">30</option><option value="35">35</option><option value="40">40</option>
+                  <option value="45">45</option><option value="50">50</option><option value="55">55</option>
+                </select>
+                <select aria-label="AM / PM" id="ampm">
+                  <option value="AM">AM</option>
+                  <option selected="selected" value="PM">PM</option>
+                </select>
+              </div>
+            </div>
+            <div class="field wide">
+              <label>Travel Time from Station to Venue (mins)</label>
+              <input id="venueTravelInput" max="360" min="0" type="number" value="45" required placeholder="e.g. 45"/>
+            </div>
+          </div>
+          <button class="submit" type="submit" id="searchSubmitBtn">🔍 Find Trains Reaching Before Deadline →</button>
+        </form>
+
+        <!-- SEARCH RESULTS CONTAINER -->
+        <div id="planResultsContainer" class="results-wrap" style="display:none;"></div>
+        <div class="result" id="planResult">Select a scenario above or enter stations to plan your journey.</div>
+      </div>
+
+      <!-- PANEL: TRAIN STATUS -->
+      <div class="panel" id="panel-status">
+        <h3>Live Train Status</h3>
+        <p class="note">Look up scheduled timetable and station stops for seeded Indian Railways trains.</p>
+        <div class="field">
+          <label>Train Number</label>
+          <input id="trainNumber" placeholder="e.g. 12124 (Deccan Queen) or 11010 (Sinhagad)"/>
+        </div>
+        <button class="submit" onclick="trackTrain()">Check Scheduled Status →</button>
+        <div id="statusResultCard"></div>
+        <div class="result" id="statusResult">Enter a train number above (e.g. 12124, 11010, 22436, 12004, 12008, 12608, 12393, 22895).</div>
+      </div>
+
+      <!-- PANEL: PNR -->
+      <div class="panel" id="panel-pnr">
+        <h3>PNR Enquiry</h3>
+        <p class="note">PNR status enquiry demo. Live PNR requires authorized railway API integration.</p>
+        <div class="field">
+          <label>10-digit PNR Number</label>
+          <input id="pnr" inputmode="numeric" maxlength="10" placeholder="Enter 10-digit PNR"/>
+        </div>
+        <button class="submit" onclick="checkPNR()">Check PNR →</button>
+        <div class="result" id="pnrResult">Enter your 10-digit PNR.</div>
+      </div>
+
+      <!-- PANEL: ACCOUNT -->
+      <div class="panel" id="panel-account">
+        <div class="account-top">
+          <h3>My TimeTrack Rail Account</h3>
+          <span>✦</span>
+        </div>
+        <div id="loggedOut">
+          <div class="fields">
+            <div class="field wide"><label>Name (for registration)</label><input id="name" placeholder="Your name"/></div>
+            <div class="field"><label>Email</label><input id="email" placeholder="you@example.com" type="email"/></div>
+            <div class="field"><label>Password</label><input id="password" placeholder="At least 8 characters" type="password"/></div>
+          </div>
+          <button class="submit" onclick="register()">Create Account</button>
+          <button class="small-btn" onclick="login()">Sign In</button>
+        </div>
+        <div hidden="" id="loggedIn">
+          <h3 id="welcome"></h3>
+          <p id="profileEmail"></p>
+          <div class="field" style="margin:16px 0">
+            <label>Edit Display Name</label>
+            <input id="editProfileName" maxlength="80" placeholder="Your name"/>
+          </div>
+          <button class="small-btn" onclick="saveProfileName()">Save Profile</button>
+          <button class="small-btn" onclick="logout()">Sign Out</button>
+        </div>
+        <div class="result" id="accountResult">Sign in to save and view your journeys.</div>
+      </div>
+
+      <!-- PANEL: GEMINI AI -->
+      <div class="panel" id="panel-ai">
+        <h3>✨ TimeTrack Rail Gemini Assistant</h3>
+        <p class="note">Ask about deadline-first journey planning, safety buffers, and station transfers.</p>
+        <div class="ai-chips">
+          <button type="button" class="small-btn" onclick="askExample('I have an interview in Mumbai at 12 PM. How should I plan from Pune?')">🎯 Interview travel</button>
+          <button type="button" class="small-btn" onclick="askExample('How much safety buffer should I keep for an exam journey on Indian Railways?')">⏱️ Exam safety buffer</button>
+          <button type="button" class="small-btn" onclick="askExample('What makes Deccan Queen or Sinhagad Express better for a 12 PM appointment?')">🚄 Pune-CSMT buffer comparison</button>
+        </div>
+        <div class="ai-chat" id="aiChat" aria-live="polite">
+          <div class="ai-bubble ai-bot">Hi! I’m your TimeTrack Rail journey assistant. How can I help you arrive safely before your deadline?</div>
+        </div>
+        <form id="aiForm" class="ai-form">
+          <label for="aiQuestion" class="ai-label">Your question</label>
+          <div class="ai-input-row">
+            <input id="aiQuestion" maxlength="1500" required placeholder="Ask about planning your train journey around a deadline..." autocomplete="off">
+            <button class="submit" type="submit" id="aiSend">Send ↗</button>
+          </div>
+        </form>
+        <p class="note" style="margin-top:12px">Powered by Google Gemini 2.5 Flash when configured. AI advice is informational; verify schedules with official railway sources.</p>
+      </div>
+
+      <!-- PANEL: DEMO BOOKING -->
+      <div class="panel" id="panel-booking">
+        <h3>🎟️ Demo Booking Simulation</h3>
+        <p class="note"><strong>Hackathon demonstration only.</strong> Pre-filled from your search results. No real payment or PNR is created.</p>
+        <form id="demoBookingForm">
+          <div class="fields">
+            <div class="field"><label>From Station</label><input id="bookFrom" required maxlength="120" placeholder="Pune Jn (PUNE)"></div>
+            <div class="field"><label>To Station</label><input id="bookTo" required maxlength="120" placeholder="Mumbai CSMT (CSMT)"></div>
+            <div class="field"><label>Journey Date</label><input id="bookDate" type="date" required></div>
+            <div class="field"><label>Train Number / Name</label><input id="bookTrain" required maxlength="50" placeholder="12124 Deccan Queen"></div>
+            <div class="field">
+              <label>Travel Class</label>
+              <select id="bookClass">
+                <option value="CC">Chair Car (CC)</option>
+                <option value="2S">Second Sitting (2S)</option>
+                <option value="EC">Executive Chair Car (EC)</option>
+                <option value="3A">AC 3 Tier (3A)</option>
+                <option value="2A">AC 2 Tier (2A)</option>
+                <option value="1A">First AC (1A)</option>
+                <option value="SL">Sleeper (SL)</option>
+              </select>
+            </div>
+            <div class="field"><label>Passenger Full Name</label><input id="bookName" required maxlength="100" placeholder="Candidate Name"></div>
+            <div class="field"><label>Passenger Age</label><input id="bookAge" type="number" min="1" max="120" value="23" required></div>
+            <div class="field">
+              <label>Gender</label>
+              <select id="bookGender">
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+                <option>Prefer not to say</option>
+              </select>
+            </div>
+          </div>
+          <button class="submit" type="submit">Create Demo Booking →</button>
+        </form>
+        <div class="result" id="bookingResult">Sign in to save a demo booking.</div>
+        <h3 style="margin-top:24px">My Demo Bookings</h3>
+        <div id="bookingList">Sign in to view demo bookings.</div>
+        <button class="small-btn" type="button" onclick="loadBookings()">Refresh Bookings ↻</button>
+      </div>
+
+      <!-- PANEL: HISTORY -->
+      <div class="panel" id="panel-history">
+        <h3>My Saved Journeys</h3>
+        <p class="note">Your recently planned deadline searches, saved to your account.</p>
+        <div id="history">Sign in to see your history.</div>
+        <button class="submit" onclick="loadHistory()">Refresh Journeys ↻</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <div class="logo" style="font-size:24px">TimeTrack<i>✦</i><span>Rail</span></div>
+    <small>TimeTrack Rail is an intelligent deadline-first train discovery platform for Indian Railways travellers. Developed for Team AvishkarX (FirstCommit '26 Hackathon). Always verify schedules with IRCTC or NTES before travelling.</small>
+    <strong>Arrive before it matters. ✦</strong>
+  </footer>
+
+  <button aria-label="Switch dark mode" class="theme-toggle" id="themeToggle" type="button">🌙 Dark Mode</button>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    function showTab(tab) {
+      document.querySelectorAll('.tab').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
+      document.querySelectorAll('.panel').forEach(el => el.classList.toggle('active', el.id === 'panel-' + tab));
+      document.getElementById('planner').scrollIntoView({ behavior: 'smooth' });
+      if (tab === 'history') loadHistory();
+      if (tab === 'account') refreshProfile();
+      if (tab === 'booking') {
+        $('bookFrom').value = $('bookFrom').value || $('source').value;
+        $('bookTo').value = $('bookTo').value || $('destination').value;
+        $('bookDate').value = $('bookDate').value || $('journey_date').value;
+        loadBookings();
+      }
+    }
+
+    const CLIENT_SEED_TRAINS = [
+      {
+        train_number: "11010", train_name: "Sinhagad Express",
+        source_code: "PUNE", source_name: "Pune Jn",
+        dest_code: "CSMT", dest_name: "Mumbai CSMT",
+        dep_time: "06:05", arr_time: "09:55", days: "Daily",
+        classes: ["CC", "2S"],
+        stops: [
+          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "06:05", day: 1},
+          {station: "Shivajinagar (SVJR)", arr: "06:11", dep: "06:13", day: 1},
+          {station: "Pimpri (PMP)", arr: "06:23", dep: "06:25", day: 1},
+          {station: "Chinchwad (CCH)", arr: "06:29", dep: "06:30", day: 1},
+          {station: "Lonavala (LNL)", arr: "07:08", dep: "07:10", day: 1},
+          {station: "Karjat (KJT)", arr: "07:58", dep: "08:00", day: 1},
+          {station: "Kalyan Jn (KYN)", arr: "08:42", dep: "08:45", day: 1},
+          {station: "Dadar Central (DR)", arr: "09:30", dep: "09:33", day: 1},
+          {station: "Mumbai CSMT (CSMT)", arr: "09:55", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12124", train_name: "Deccan Queen SF Express",
+        source_code: "PUNE", source_name: "Pune Jn",
+        dest_code: "CSMT", dest_name: "Mumbai CSMT",
+        dep_time: "07:15", arr_time: "10:25", days: "Daily",
+        classes: ["CC", "2S"],
+        stops: [
+          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "07:15", day: 1},
+          {station: "Shivajinagar (SVJR)", arr: "07:20", dep: "07:22", day: 1},
+          {station: "Lonavala (LNL)", arr: "08:13", dep: "08:15", day: 1},
+          {station: "Karjat (KJT)", arr: "08:58", dep: "09:00", day: 1},
+          {station: "Dadar Central (DR)", arr: "10:02", dep: "10:05", day: 1},
+          {station: "Mumbai CSMT (CSMT)", arr: "10:25", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "11008", train_name: "Deccan Express",
+        source_code: "PUNE", source_name: "Pune Jn",
+        dest_code: "CSMT", dest_name: "Mumbai CSMT",
+        dep_time: "15:15", arr_time: "19:05", days: "Daily",
+        classes: ["CC", "2S"],
+        stops: [
+          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "15:15", day: 1},
+          {station: "Khadki (KK)", arr: "15:23", dep: "15:25", day: 1},
+          {station: "Talegaon (TGN)", arr: "15:48", dep: "15:50", day: 1},
+          {station: "Lonavala (LNL)", arr: "16:18", dep: "16:20", day: 1},
+          {station: "Kalyan Jn (KYN)", arr: "17:52", dep: "17:55", day: 1},
+          {station: "Dadar Central (DR)", arr: "18:40", dep: "18:43", day: 1},
+          {station: "Mumbai CSMT (CSMT)", arr: "19:05", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12128", train_name: "Pune - Mumbai Intercity SF",
+        source_code: "PUNE", source_name: "Pune Jn",
+        dest_code: "CSMT", dest_name: "Mumbai CSMT",
+        dep_time: "17:55", arr_time: "21:05", days: "Daily",
+        classes: ["CC", "2S"],
+        stops: [
+          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "17:55", day: 1},
+          {station: "Shivajinagar (SVJR)", arr: "18:02", dep: "18:04", day: 1},
+          {station: "Lonavala (LNL)", arr: "18:53", dep: "18:55", day: 1},
+          {station: "Thane (TNA)", arr: "20:18", dep: "20:20", day: 1},
+          {station: "Dadar Central (DR)", arr: "20:42", dep: "20:45", day: 1},
+          {station: "Mumbai CSMT (CSMT)", arr: "21:05", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "22106", train_name: "Indrayani SF Express",
+        source_code: "PUNE", source_name: "Pune Jn",
+        dest_code: "CSMT", dest_name: "Mumbai CSMT",
+        dep_time: "18:35", arr_time: "21:55", days: "Daily",
+        classes: ["CC", "2S"],
+        stops: [
+          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "18:35", day: 1},
+          {station: "Shivajinagar (SVJR)", arr: "18:42", dep: "18:44", day: 1},
+          {station: "Lonavala (LNL)", arr: "19:33", dep: "19:35", day: 1},
+          {station: "Karjat (KJT)", arr: "20:18", dep: "20:20", day: 1},
+          {station: "Kalyan Jn (KYN)", arr: "20:57", dep: "21:00", day: 1},
+          {station: "Dadar Central (DR)", arr: "21:34", dep: "21:37", day: 1},
+          {station: "Mumbai CSMT (CSMT)", arr: "21:55", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "22436", train_name: "Varanasi Vande Bharat Exp",
+        source_code: "NDLS", source_name: "New Delhi",
+        dest_code: "CNB", dest_name: "Kanpur Central",
+        dep_time: "06:00", arr_time: "10:08", days: "Daily (Ex Thu)",
+        classes: ["CC", "EC"],
+        stops: [
+          {station: "New Delhi (NDLS)", arr: "Starts", dep: "06:00", day: 1},
+          {station: "Kanpur Central (CNB)", arr: "10:08", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12004", train_name: "Lucknow Swarna Shatabdi",
+        source_code: "NDLS", source_name: "New Delhi",
+        dest_code: "CNB", dest_name: "Kanpur Central",
+        dep_time: "06:10", arr_time: "11:20", days: "Daily",
+        classes: ["CC", "EC"],
+        stops: [
+          {station: "New Delhi (NDLS)", arr: "Starts", dep: "06:10", day: 1},
+          {station: "Ghaziabad (GZB)", arr: "06:38", dep: "06:40", day: 1},
+          {station: "Aligarh Jn (ALJN)", arr: "07:50", dep: "07:52", day: 1},
+          {station: "Tundla Jn (TDL)", arr: "08:50", dep: "08:52", day: 1},
+          {station: "Etawah Jn (ETW)", arr: "09:48", dep: "09:50", day: 1},
+          {station: "Kanpur Central (CNB)", arr: "11:20", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12008", train_name: "MGR Chennai Central Shatabdi",
+        source_code: "SBC", source_name: "KSR Bengaluru",
+        dest_code: "MAS", dest_name: "MGR Chennai Central",
+        dep_time: "06:00", arr_time: "11:00", days: "Daily (Ex Tue)",
+        classes: ["CC", "EC"],
+        stops: [
+          {station: "KSR Bengaluru (SBC)", arr: "Starts", dep: "06:00", day: 1},
+          {station: "Katpadi Jn (KPD)", arr: "09:08", dep: "09:10", day: 1},
+          {station: "MGR Chennai Central (MAS)", arr: "11:00", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12608", train_name: "Lalbagh SF Express",
+        source_code: "SBC", source_name: "KSR Bengaluru",
+        dest_code: "MAS", dest_name: "MGR Chennai Central",
+        dep_time: "06:25", arr_time: "12:15", days: "Daily",
+        classes: ["CC", "2S"],
+        stops: [
+          {station: "KSR Bengaluru (SBC)", arr: "Starts", dep: "06:25", day: 1},
+          {station: "Bangarapet (BWT)", arr: "07:28", dep: "07:30", day: 1},
+          {station: "Katpadi Jn (KPD)", arr: "09:48", dep: "09:50", day: 1},
+          {station: "Arakkonam Jn (AJJ)", arr: "10:48", dep: "10:50", day: 1},
+          {station: "MGR Chennai Central (MAS)", arr: "12:15", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12393", train_name: "Sampoorna Kranti Express",
+        source_code: "PNBE", source_name: "Patna Jn",
+        dest_code: "NDLS", dest_name: "New Delhi",
+        dep_time: "19:25", arr_time: "07:55", days: "Daily",
+        classes: ["1A", "2A", "3A", "SL"],
+        stops: [
+          {station: "Patna Jn (PNBE)", arr: "Starts", dep: "19:25", day: 1},
+          {station: "Ara Jn (ARA)", arr: "20:03", dep: "20:05", day: 1},
+          {station: "Buxar (BXR)", arr: "20:53", dep: "20:55", day: 1},
+          {station: "Pt DD Upadhyaya Jn (DDU)", arr: "22:22", dep: "22:32", day: 1},
+          {station: "Kanpur Central (CNB)", arr: "02:25", dep: "02:30", day: 2},
+          {station: "New Delhi (NDLS)", arr: "07:55", dep: "Ends", day: 2}
+        ]
+      },
+      {
+        train_number: "12309", train_name: "Rajendra Nagar - New Delhi Tejas Rajdhani",
+        source_code: "PNBE", source_name: "Patna Jn",
+        dest_code: "NDLS", dest_name: "New Delhi",
+        dep_time: "19:35", arr_time: "07:40", days: "Daily",
+        classes: ["1A", "2A", "3A"],
+        stops: [
+          {station: "Patna Jn (PNBE)", arr: "Starts", dep: "19:35", day: 1},
+          {station: "Pt DD Upadhyaya Jn (DDU)", arr: "22:10", dep: "22:20", day: 1},
+          {station: "Prayagraj Jn (PRYJ)", arr: "00:10", dep: "00:12", day: 2},
+          {station: "Kanpur Central (CNB)", arr: "02:15", dep: "02:20", day: 2},
+          {station: "New Delhi (NDLS)", arr: "07:40", dep: "Ends", day: 2}
+        ]
+      },
+      {
+        train_number: "22895", train_name: "Howrah - Puri Vande Bharat Express",
+        source_code: "HWH", source_name: "Howrah Jn",
+        dest_code: "BBS", dest_name: "Bhubaneswar",
+        dep_time: "06:10", arr_time: "12:20", days: "Daily (Ex Thu)",
+        classes: ["CC", "EC"],
+        stops: [
+          {station: "Howrah Jn (HWH)", arr: "Starts", dep: "06:10", day: 1},
+          {station: "Kharagpur Jn (KGP)", arr: "07:38", dep: "07:40", day: 1},
+          {station: "Balasore (BLS)", arr: "09:01", dep: "09:03", day: 1},
+          {station: "Bhadrak (BHC)", arr: "09:53", dep: "09:55", day: 1},
+          {station: "Jajpur Keonjhar Road (JJKR)", arr: "10:23", dep: "10:25", day: 1},
+          {station: "Cuttack Jn (CTC)", arr: "11:22", dep: "11:24", day: 1},
+          {station: "Bhubaneswar (BBS)", arr: "12:20", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12073", train_name: "Howrah - Bhubaneswar Jan Shatabdi Express",
+        source_code: "HWH", source_name: "Howrah Jn",
+        dest_code: "BBS", dest_name: "Bhubaneswar",
+        dep_time: "13:25", arr_time: "20:00", days: "Daily (Ex Sun)",
+        classes: ["CC", "2S"],
+        stops: [
+          {station: "Howrah Jn (HWH)", arr: "Starts", dep: "13:25", day: 1},
+          {station: "Kharagpur Jn (KGP)", arr: "15:00", dep: "15:05", day: 1},
+          {station: "Belda (BLDA)", arr: "15:35", dep: "15:36", day: 1},
+          {station: "Jaleswar (JER)", arr: "16:00", dep: "16:02", day: 1},
+          {station: "Balasore (BLS)", arr: "16:38", dep: "16:40", day: 1},
+          {station: "Soro (SORO)", arr: "17:08", dep: "17:10", day: 1},
+          {station: "Bhadrak (BHC)", arr: "17:58", dep: "18:00", day: 1},
+          {station: "Jajpur K Road (JJKR)", arr: "18:31", dep: "18:33", day: 1},
+          {station: "Cuttack Jn (CTC)", arr: "19:26", dep: "19:28", day: 1},
+          {station: "Bhubaneswar (BBS)", arr: "20:00", dep: "Ends", day: 1}
+        ]
+      }
+    ];
+
+    function clientFallbackSearch(payload) {
+      const { source, destination, journey_date, deadline, venue_travel_minutes } = payload;
+      const venueMins = Number(venue_travel_minutes) || 0;
+      
+      const clean = s => s.toUpperCase().replace(/\s+/g, ' ');
+      const extractCode = s => {
+        const m = s.match(/\(([A-Z]+)\)/);
+        return m ? m[1].toUpperCase() : s.toUpperCase().trim();
+      };
+      const sCode = extractCode(source);
+      const dCode = extractCode(destination);
+      const sRaw = clean(source);
+      const dRaw = clean(destination);
+
+      const matches = CLIENT_SEED_TRAINS.filter(t => {
+        const sMatch = t.source_code === sCode || clean(t.source_name).includes(sCode) || sRaw.includes(t.source_code) || sRaw.includes(clean(t.source_name));
+        const dMatch = t.dest_code === dCode || clean(t.dest_name).includes(dCode) || dRaw.includes(t.dest_code) || dRaw.includes(clean(t.dest_name));
+        return sMatch && dMatch;
+      });
+
+      const [dHour, dMin] = deadline.split(':').map(Number);
+      const deadlineTotalMins = dHour * 60 + dMin;
+
+      const qualifying = [];
+      const rejected = [];
+
+      for (const t of matches) {
+        const [arrH, arrM] = t.arr_time.split(':').map(Number);
+        const arrTotalMins = arrH * 60 + arrM;
+        const venueArrivalTotalMins = arrTotalMins + venueMins;
+        
+        const venueH = Math.floor(venueArrivalTotalMins / 60) % 24;
+        const venueM = venueArrivalTotalMins % 60;
+        const venueArrivalStr = String(venueH).padStart(2, '0') + ':' + String(venueM).padStart(2, '0');
+
+        const spareMinutes = deadlineTotalMins - venueArrivalTotalMins;
+
+        let risk_tag = 'Late';
+        if (spareMinutes >= 60) risk_tag = 'Safe';
+        else if (spareMinutes >= 30) risk_tag = 'Tight';
+        else if (spareMinutes >= 0) risk_tag = 'Risky';
+
+        const item = {
+          train_number: t.train_number,
+          train_name: t.train_name,
+          source: `${t.source_name} (${t.source_code})`,
+          destination: `${t.dest_name} (${t.dest_code})`,
+          dep_time: t.dep_time,
+          arr_time: t.arr_time,
+          venue_arrival_time: venueArrivalStr,
+          venue_travel_minutes: venueMins,
+          spare_minutes: spareMinutes,
+          risk_tag: risk_tag,
+          days: t.days,
+          classes: t.classes,
+          stops: t.stops,
+          irctc_url: 'https://www.irctc.co.in/nget/train-search'
+        };
+
+        if (spareMinutes >= 0) qualifying.push(item);
+        else rejected.push(item);
+      }
+
+      qualifying.sort((a, b) => b.spare_minutes - a.spare_minutes);
+
+      let aiRec = '';
+      if (!qualifying.length) {
+        aiRec = `No trains from ${source} to ${destination} reach in time for your ${deadline} deadline (accounting for ${venueMins} mins travel from the station to your venue). Consider travelling the evening before or choosing an earlier departure.`;
+      } else {
+        const top = qualifying[0];
+        aiRec = `Take ${top.train_number} ${top.train_name} departing at ${top.dep_time} and arriving at ${top.arr_time}. After ${venueMins} mins to reach your venue, you will arrive at ${top.venue_arrival_time} — giving you ${top.spare_minutes} minutes to spare (${top.risk_tag} buffer).`;
+      }
+
+      return {
+        mode: 'timetable',
+        source: source,
+        destination: destination,
+        journey_date: journey_date,
+        deadline: deadline,
+        venue_travel_minutes: venueMins,
+        trains: qualifying,
+        rejected_count: rejected.length,
+        ai_recommendation: aiRec,
+        message: `Found ${qualifying.length} train(s) arriving before your ${deadline} deadline.`
+      };
+    }
+
+    function clientFallbackLive(num) {
+      const train = CLIENT_SEED_TRAINS.find(t => t.train_number === num);
+      if (train) {
+        return {
+          mode: 'timetable',
+          train_number: train.train_number,
+          train_name: train.train_name,
+          route: `${train.source_name} (${train.source_code}) -> ${train.dest_name} (${train.dest_code})`,
+          dep_time: train.dep_time,
+          arr_time: train.arr_time,
+          stops: train.stops,
+          message: 'Scheduled timetable loaded. Live GPS running status requires NTES partner credentials.'
+        };
+      }
+      return {
+        mode: 'demo',
+        train_number: num,
+        message: 'Train not in sample timetable. Live tracking requires an authorized railway API.'
+      };
+    }
+
+    function clientFallbackAssistant(question) {
+      const q = (question || '').toLowerCase();
+      if (q.includes('usp') || q.includes('unique') || q.includes('platform') || q.includes('explain') || q.includes('about') || q.includes('what is')) {
+        return "✨ TimeTrack Rail's Core USP: Backward-Chained Deadline-First Discovery\n\nTraditional portals (IRCTC/NTES) search forward from departure time, forcing travellers to open multiple train schedules and manually guess whether they will reach in time. For critical commitments (UPSC exams, job interviews, surgeries), a single calculation error can lead to a missed opportunity.\n\nTimeTrack Rail solves this by:\n1. Inputting Venue Deadline: You enter when you must reach your venue (e.g. 12:00 PM) and transit time (e.g. 45m cab).\n2. Automated Elimination: Trains arriving too late are automatically filtered out.\n3. Color-Coded Buffer: Qualifying trains are tagged Safe (≥60m spare), Tight (30–59m), or Risky (0–29m).\n4. AI Guidance: Plain-English summary of the safest travel plan.";
+      }
+      if (q.includes('buffer') || q.includes('safety') || q.includes('how much time') || q.includes('margin')) {
+        return "⏱️ Recommended Safety Buffers for Indian Railways:\n\n• Exams & Job Interviews: Minimum 60+ minutes ('Safe' badge) after reaching the venue to account for registration, security checks, and city traffic.\n• Standard Business Meetings: 30–59 minutes ('Tight' badge).\n• Under 30 minutes ('Risky'): High risk of missing your commitment due to signal delays or cab traffic.";
+      }
+      if (q.includes('pune') || q.includes('mumbai') || q.includes('csmt') || q.includes('sinhagad') || q.includes('deccan queen')) {
+        return "🚄 Pune Jn to Mumbai CSMT Corridor Analysis:\n\nFor a 12:00 PM venue deadline with 45-minute cab transit:\n• 11010 Sinhagad Express: Departs 06:05 → Arrives 09:55 → Reaches Venue 10:40 → 80 mins spare (Safe Buffer). Top recommendation!\n• 12124 Deccan Queen SF: Departs 07:15 → Arrives 10:25 → Reaches Venue 11:10 → 50 mins spare (Tight Buffer).\n• Evening Trains: Arrive between 19:05 and 21:55 and are automatically rejected by our deadline filter.";
+      }
+      return "✨ TimeTrack Rail Assistant:\n\nYou asked: \"" + question + "\"\n\nTimeTrack Rail is designed specifically to eliminate arrival anxiety on Indian Railways. Enter your venue deadline, and our engine automatically eliminates late trains and highlights the safest journey buffers.\n\n💡 Tip: Use the 1-click pitch demo above to see the deadline algorithm live in action!";
+    }
+
+    async function api(url, opts = {}) {
+      try {
+        const targetUrl = (window.location.protocol === 'file:' || !window.location.host)
+          ? ('http://127.0.0.1:5002' + url)
+          : url;
+        const res = await fetch(targetUrl, {
+          ...opts,
+          headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
+        });
+        const contentType = res.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) throw Error('Server returned HTML instead of JSON. Ensure Flask is running on port 5002.');
+        const data = await res.json();
+        if (!res.ok) throw Error(data.error || 'Request failed');
+        return data;
+      } catch (e) {
+        // Resilient fallback: compute locally if server is offline or opened via file://
+        if (url === '/api/trains/search' && opts.body) {
+          try {
+            return clientFallbackSearch(JSON.parse(opts.body));
+          } catch (err) {}
+        }
+        if (url.startsWith('/api/trains/live') && opts.method !== 'POST') {
+          const num = new URLSearchParams(url.split('?')[1] || '').get('train_number');
+          if (num) {
+            const fallback = clientFallbackLive(num);
+            if (fallback) return fallback;
+          }
+        }
+        if (url === '/api/assistant' && opts.body) {
+          try {
+            const parsed = JSON.parse(opts.body);
+            return { mode: 'fallback', reply: clientFallbackAssistant(parsed.message || parsed.question || '') };
+          } catch (err) {}
+        }
+        return { error: e.message };
+      }
+    }
+
+    const post = data => ({ method: 'POST', body: JSON.stringify(data) });
+    function show(id, msg) { $(id).textContent = msg; }
+
+    /* AUTH LOGIC */
+    async function register() {
+      const data = await api('/api/auth/register', post({ name: $('name').value, email: $('email').value, password: $('password').value }));
+      show('accountResult', data.error || 'Account created successfully!');
+      refreshProfile();
+    }
+    async function login() {
+      const data = await api('/api/auth/login', post({ email: $('email').value, password: $('password').value }));
+      show('accountResult', data.error || 'Welcome back!');
+      refreshProfile();
+    }
+    async function logout() {
+      await api('/api/auth/logout', post({}));
+      show('accountResult', 'Signed out successfully.');
+      refreshProfile();
+    }
+    async function refreshProfile() {
+      const data = await api('/api/auth/me');
+      const u = data.user;
+      $('loggedOut').hidden = !!u;
+      $('loggedIn').hidden = !u;
+      if (u) {
+        show('welcome', 'Welcome, ' + u.name + ' ✨');
+        show('profileEmail', u.email);
+        $('editProfileName').value = u.name;
+      }
+      if ($('panel-history').classList.contains('active')) loadHistory();
+    }
+    async function saveProfileName() {
+      const name = $('editProfileName').value.trim();
+      const d = await api('/api/auth/profile', { method: 'PATCH', body: JSON.stringify({ name }) });
+      show('accountResult', d.error || 'Profile updated successfully.');
+      if (!d.error) refreshProfile();
+    }
+
+    /* SEARCH HISTORY */
+    async function loadHistory() {
+      const data = await api('/api/searches');
+      const c = $('history');
+      c.replaceChildren();
+      if (data.error) { c.textContent = 'Please sign in to view saved journeys.'; return; }
+      if (!data.searches || !data.searches.length) { c.textContent = 'No journeys saved yet.'; return; }
+      for (const item of data.searches) {
+        const row = document.createElement('div');
+        row.className = 'history-item';
+        const text = document.createElement('span');
+        text.textContent = `${item.source} → ${item.destination} • ${item.journey_date} • Deadline ${item.deadline} (+${item.buffer}m travel)`;
+        const btn = document.createElement('button');
+        btn.className = 'small-btn';
+        btn.textContent = 'Delete';
+        btn.onclick = async () => {
+          await api('/api/searches/' + item.id, { method: 'DELETE' });
+          loadHistory();
+        };
+        row.append(text, btn);
+        c.append(row);
+      }
+    }
+
+    /* QUICK PRESETS & PITCH SCENARIO */
+    function applyPitchPreset() {
+      applyQuickPreset('Pune Jn (PUNE)', 'Mumbai CSMT (CSMT)', '12:00', 45);
+    }
+
+    function applyQuickPreset(source, dest, deadline24, venueMins) {
+      $('source').value = source;
+      $('destination').value = dest;
+      $('venueTravelInput').value = venueMins;
+      
+      const [h, m] = deadline24.split(':').map(Number);
+      const ampmVal = h >= 12 ? 'PM' : 'AM';
+      let h12 = h % 12;
+      if (h12 === 0) h12 = 12;
+      $('hour12').value = String(h12);
+      $('minute12').value = String(m).padStart(2, '0');
+      $('ampm').value = ampmVal;
+      rqSyncTime();
+      
+      $('plannerForm').requestSubmit();
+    }
+
+    /* TIME CONTROLS SYNC */
+    function rqSyncTime() {
+      const h = Number($('hour12').value);
+      const m = $('minute12').value;
+      const ap = $('ampm').value;
+      const h24 = (h % 12) + (ap === 'PM' ? 12 : 0);
+      $('deadline').value = String(h24).padStart(2, '0') + ':' + m;
+    }
+    ['hour12', 'minute12', 'ampm'].forEach(id => $(id).addEventListener('change', rqSyncTime));
+
+    /* SEARCH SUBMISSION & RESULT RENDERING */
+    $('plannerForm').onsubmit = async e => {
+      e.preventDefault();
+      rqSyncTime();
+      
+      const container = $('planResultsContainer');
+      const plainResult = $('planResult');
+      container.style.display = 'none';
+      container.replaceChildren();
+      plainResult.style.display = 'block';
+      plainResult.textContent = 'Analyzing timetables and computing safe arrival buffers...';
+
+      const payload = {
+        source: $('source').value.trim(),
+        destination: $('destination').value.trim(),
+        journey_date: $('journey_date').value,
+        deadline: $('deadline').value,
+        venue_travel_minutes: Number($('venueTravelInput').value) || 0
+      };
+
+      const data = await api('/api/trains/search', post(payload));
+
+      if (data.error) {
+        plainResult.textContent = '⚠️ ' + data.error;
+        return;
+      }
+
+      plainResult.style.display = 'none';
+      container.style.display = 'flex';
+      renderSearchResults(data, payload);
+    };
+
+    function renderSearchResults(data, query) {
+      const container = $('planResultsContainer');
+      container.replaceChildren();
+
+      // 1. AI Recommendation Banner
+      const aiBanner = document.createElement('div');
+      aiBanner.className = 'ai-banner';
+
+      const aiHeader = document.createElement('div');
+      aiHeader.className = 'ai-banner-header';
+
+      const aiBadge = document.createElement('div');
+      aiBadge.className = 'ai-banner-badge';
+      aiBadge.innerHTML = '✨ <b>Gemini AI Recommendation</b>';
+
+      const filterTag = document.createElement('div');
+      filterTag.className = 'ai-banner-filter-tag';
+      filterTag.innerHTML = `🛡️ <b>${data.rejected_count} late train(s)</b> filtered out`;
+
+      aiHeader.append(aiBadge, filterTag);
+
+      const aiText = document.createElement('p');
+      aiText.className = 'ai-banner-text';
+      aiText.textContent = data.ai_recommendation || 'No recommendation available.';
+
+      aiBanner.append(aiHeader, aiText);
+      container.append(aiBanner);
+
+      // 2. Train Cards List
+      const cardsList = document.createElement('div');
+      cardsList.className = 'train-cards-list';
+
+      if (!data.trains || data.trains.length === 0) {
+        const noTrains = document.createElement('div');
+        noTrains.className = 'train-card';
+        noTrains.style.textAlign = 'center';
+        noTrains.innerHTML = `
+          <h4>No Qualifying Trains Arrive Before Your Deadline</h4>
+          <p style="color:#6e8296; font-size:14px; margin-top:8px;">
+            All trains from <b>${query.source}</b> to <b>${query.destination}</b> were filtered out because they reach the station too late to cover the ${query.venue_travel_minutes}m journey to your venue before ${query.deadline}.
+          </p>
+          <p style="font-size:13px; font-weight:700; color:#188673; margin-top:12px;">
+            Tip: Consider travelling the evening before or adjusting your travel buffer.
+          </p>
+        `;
+        cardsList.append(noTrains);
+      } else {
+        data.trains.forEach(train => {
+          const card = document.createElement('div');
+          card.className = 'train-card';
+
+          // Top Info Row
+          const topRow = document.createElement('div');
+          topRow.className = 'train-card-top';
+
+          const info = document.createElement('div');
+          info.className = 'train-card-info';
+          const title = document.createElement('h4');
+          title.textContent = `${train.train_number} ${train.train_name}`;
+          const meta = document.createElement('div');
+          meta.className = 'train-card-meta';
+          meta.textContent = `${train.days} • Classes: ${(train.classes || []).join(', ')}`;
+          info.append(title, meta);
+
+          const badge = document.createElement('div');
+          badge.className = `risk-badge badge-${train.risk_tag}`;
+          badge.textContent = `${train.risk_tag} • ${train.spare_minutes} mins spare`;
+
+          topRow.append(info, badge);
+
+          // Timeline breakdown
+          const timeline = document.createElement('div');
+          timeline.className = 'timeline-bar';
+          timeline.innerHTML = `
+            <div class="timeline-step">
+              <small>Departs Origin</small>
+              <strong>${train.dep_time}</strong>
+              <span style="font-size:11px;color:#677d94">${train.source}</span>
+            </div>
+            <div class="timeline-arrow">➔</div>
+            <div class="timeline-step">
+              <small>Arrives Destination</small>
+              <strong>${train.arr_time}</strong>
+              <span style="font-size:11px;color:#677d94">${train.destination}</span>
+            </div>
+            <div class="timeline-arrow">➔</div>
+            <div class="timeline-step venue-step">
+              <small>Reaches Venue (+${train.venue_travel_minutes}m transit)</small>
+              <strong>${train.venue_arrival_time}</strong>
+              <span style="font-size:11px;color:#188673">Deadline: ${query.deadline} (${train.spare_minutes}m buffer)</span>
+            </div>
+          `;
+
+          // Buffer Health Visual Meter
+          const bufferMeter = document.createElement('div');
+          bufferMeter.className = 'buffer-meter-wrap';
+          const bufferPct = Math.min(100, Math.max(12, Math.round((train.spare_minutes / 90) * 100)));
+          bufferMeter.innerHTML = `
+            <div class="buffer-meter-header">
+              <span class="buffer-meter-title">🛡️ Buffer Health: <b>${train.spare_minutes} minutes</b> before venue deadline</span>
+              <span class="buffer-meter-status status-${train.risk_tag}">${train.risk_tag} Margin</span>
+            </div>
+            <div class="buffer-meter-track">
+              <div class="buffer-meter-fill fill-${train.risk_tag}" style="width: ${bufferPct}%;"></div>
+            </div>
+            <div class="buffer-meter-markers">
+              <span>0m (Danger)</span>
+              <span>30m (Tight)</span>
+              <span>60m (Safe)</span>
+              <span>90m+ (Ultra Safe)</span>
+            </div>
+          `;
+
+          // Station-by-station details
+          const details = document.createElement('details');
+          details.className = 'stops-details';
+          const summary = document.createElement('summary');
+          summary.textContent = `View Station-by-Station Route (${(train.stops || []).length} stops) ▾`;
+          details.append(summary);
+
+          // Route Stepper Visual
+          if (train.stops && train.stops.length > 0) {
+            const stepper = document.createElement('div');
+            stepper.className = 'route-stepper';
+            stepper.innerHTML = `
+              <div class="route-stepper-title">Intermediate Station Pathway:</div>
+              <div class="stepper-nodes">
+                ${train.stops.map((s, idx, arr) => `
+                  <div class="stepper-node ${idx === 0 ? 'node-start' : (idx === arr.length - 1 ? 'node-end' : '')}">
+                    <div class="node-dot"></div>
+                    <div class="node-station" title="${s.station}">${s.station.split('(')[0].trim()}</div>
+                    <div class="node-time">${s.dep !== 'Ends' ? s.dep : s.arr}</div>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+            details.append(stepper);
+
+            const table = document.createElement('table');
+            table.className = 'stops-table';
+            table.innerHTML = `
+              <thead>
+                <tr>
+                  <th>Station</th>
+                  <th>Arrival</th>
+                  <th>Departure</th>
+                  <th>Day</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${train.stops.map(s => `
+                  <tr>
+                    <td><b>${s.station}</b></td>
+                    <td>${s.arr}</td>
+                    <td>${s.dep}</td>
+                    <td>Day ${s.day}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            `;
+            details.append(table);
+          }
+
+          // Action buttons
+          const actions = document.createElement('div');
+          actions.className = 'card-actions';
+
+          const irctcLink = document.createElement('a');
+          irctcLink.className = 'btn-irctc';
+          irctcLink.href = train.irctc_url || 'https://www.irctc.co.in/nget/train-search';
+          irctcLink.target = '_blank';
+          irctcLink.rel = 'noopener';
+          irctcLink.innerHTML = 'Book on IRCTC ↗';
+
+          const demoBtn = document.createElement('button');
+          demoBtn.type = 'button';
+          demoBtn.className = 'btn-demo-book';
+          demoBtn.innerHTML = 'Select for Demo Booking →';
+          demoBtn.onclick = () => {
+            selectForDemoBooking(train.train_number, train.source, train.destination);
+          };
+
+          const copyBtn = document.createElement('button');
+          copyBtn.type = 'button';
+          copyBtn.className = 'btn-copy-itinerary';
+          copyBtn.innerHTML = '📋 Copy Itinerary';
+          copyBtn.onclick = () => {
+            const summaryText = `🚆 TimeTrack Rail Itinerary:\nTrain: ${train.train_number} ${train.train_name}\nDeparture: ${train.source} at ${train.dep_time}\nArrival: ${train.destination} at ${train.arr_time}\nVenue Arrival: ${train.venue_arrival_time} (Deadline: ${query.deadline})\nSafety Margin: ${train.spare_minutes} mins (${train.risk_tag})\nOfficial Booking: https://www.irctc.co.in/nget/train-search`;
+            navigator.clipboard.writeText(summaryText).then(() => {
+              showToast('✅ Itinerary copied to clipboard!');
+            }).catch(() => {
+              showToast('Itinerary ready: ' + train.train_name);
+            });
+          };
+
+          actions.append(irctcLink, demoBtn, copyBtn);
+
+          card.append(topRow, timeline, bufferMeter, details, actions);
+          cardsList.append(card);
+        });
+      }
+
+      container.append(cardsList);
+    }
+
+    /* SELECT FOR DEMO BOOKING */
+    function selectForDemoBooking(trainNum, src, dst) {
+      showTab('booking');
+      $('bookTrain').value = trainNum;
+      $('bookFrom').value = src;
+      $('bookTo').value = dst;
+      $('bookDate').value = $('journey_date').value;
+      $('demoBookingForm').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* LIVE TRAIN STATUS */
+    async function trackTrain() {
+      const n = $('trainNumber').value.trim();
+      if (!n) { show('statusResult', 'Please enter a train number (e.g. 12124).'); return; }
+      
+      const cardContainer = $('statusResultCard');
+      cardContainer.replaceChildren();
+      show('statusResult', 'Checking timetable...');
+
+      const d = await api('/api/trains/live?train_number=' + encodeURIComponent(n));
+      if (d.error) {
+        show('statusResult', '⚠️ ' + d.error);
+        return;
+      }
+
+      if (d.mode === 'timetable') {
+        $('statusResult').textContent = d.message;
+        const card = document.createElement('div');
+        card.className = 'live-status-card';
+        card.innerHTML = `
+          <h4>${d.train_number} — ${d.train_name}</h4>
+          <div class="live-status-route">Route: ${d.route} • Scheduled: ${d.dep_time} &rarr; ${d.arr_time}</div>
+          <div style="margin-top:10px;">
+            <table class="stops-table">
+              <thead>
+                <tr>
+                  <th>Station</th>
+                  <th>Arrival</th>
+                  <th>Departure</th>
+                  <th>Day</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${(d.stops || []).map(s => `
+                  <tr>
+                    <td><b>${s.station}</b></td>
+                    <td>${s.arr}</td>
+                    <td>${s.dep}</td>
+                    <td>Day ${s.day}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+        cardContainer.append(card);
+      } else {
+        show('statusResult', d.message || 'Train not found.');
+      }
+    }
+
+    /* PNR ENQUIRY */
+    async function checkPNR() {
+      const n = $('pnr').value.trim();
+      if (!/^\d{10}$/.test(n)) { show('pnrResult', 'Enter a valid 10-digit PNR.'); return; }
+      const d = await api('/api/pnr/' + n);
+      show('pnrResult', d.error || d.message || 'No PNR status available');
+    }
+
+    /* INITIALIZATION & DATE SETUP */
+    const now = new Date();
+    $('journey_date').value = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    $('bookDate').value = $('journey_date').value;
+    refreshProfile();
+
+    const observer = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    }), { threshold: .1 });
+    document.querySelectorAll('.reveal').forEach(e => observer.observe(e));
+  </script>
+
+  <!-- AUTOCOMPLETE STATIONS & THEME -->
+  <script>
+    const RQ_STATIONS = [
+      ['Pune Jn (PUNE)', 'PUNE', 'Maharashtra'],
+      ['Shivajinagar (SVJR)', 'SVJR', 'Maharashtra'],
+      ['Mumbai CSMT (CSMT)', 'CSMT', 'Maharashtra'],
+      ['Dadar Central (DR)', 'DR', 'Maharashtra'],
+      ['Kalyan Jn (KYN)', 'KYN', 'Maharashtra'],
+      ['Lonavala (LNL)', 'LNL', 'Maharashtra'],
+      ['Karjat (KJT)', 'KJT', 'Maharashtra'],
+      ['New Delhi (NDLS)', 'NDLS', 'Delhi'],
+      ['Kanpur Central (CNB)', 'CNB', 'Uttar Pradesh'],
+      ['Ghaziabad (GZB)', 'GZB', 'Uttar Pradesh'],
+      ['Aligarh Jn (ALJN)', 'ALJN', 'Uttar Pradesh'],
+      ['KSR Bengaluru (SBC)', 'SBC', 'Karnataka'],
+      ['MGR Chennai Central (MAS)', 'MAS', 'Tamil Nadu'],
+      ['Katpadi Jn (KPD)', 'KPD', 'Tamil Nadu'],
+      ['Patna Jn (PNBE)', 'PNBE', 'Bihar'],
+      ['Ara Jn (ARA)', 'ARA', 'Bihar'],
+      ['Buxar (BXR)', 'BXR', 'Bihar'],
+      ['Pt DD Upadhyaya Jn (DDU)', 'DDU', 'Uttar Pradesh'],
+      ['Howrah Jn (HWH)', 'HWH', 'West Bengal'],
+      ['Bhubaneswar (BBS)', 'BBS', 'Odisha'],
+      ['Cuttack Jn (CTC)', 'CTC', 'Odisha'],
+      ['Kharagpur Jn (KGP)', 'KGP', 'West Bengal'],
+      ['Balasore (BLS)', 'BLS', 'Odisha'],
+      ['Thane (TNA)', 'TNA', 'Maharashtra'],
+      ['Panvel (PNVL)', 'PNVL', 'Maharashtra'],
+      ['Nagpur Jn (NGP)', 'NGP', 'Maharashtra'],
+      ['Ahmedabad Jn (ADI)', 'ADI', 'Gujarat'],
+      ['Surat (ST)', 'ST', 'Gujarat'],
+      ['Jaipur Jn (JP)', 'JP', 'Rajasthan'],
+      ['Secunderabad Jn (SC)', 'SC', 'Telangana'],
+      ['Lucknow Charbagh (LKO)', 'LKO', 'Uttar Pradesh']
+    ];
+
+    function rqAutocomplete(id) {
+      const input = document.getElementById(id);
+      const list = document.getElementById(id + '-suggestions');
+      let selected = -1, options = [];
+
+      function hide() {
+        list.hidden = true;
+        input.setAttribute('aria-expanded', 'false');
+        selected = -1;
+      }
+
+      function choose(station) {
+        input.value = station[0];
+        hide();
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      function render() {
+        const q = input.value.trim().toLowerCase();
+        list.replaceChildren();
+        selected = -1;
+        if (!q) { hide(); return; }
+
+        options = RQ_STATIONS.filter(x => x[0].toLowerCase().startsWith(q) || x[1].toLowerCase().startsWith(q));
+        if (options.length < 8) {
+          options.push(...RQ_STATIONS.filter(x => !options.includes(x) && x[0].toLowerCase().includes(q)).slice(0, 8 - options.length));
+        }
+        options = options.slice(0, 9);
+        if (!options.length) { hide(); return; }
+
+        options.forEach((station, i) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'station-choice';
+          btn.setAttribute('role', 'option');
+          const title = document.createElement('span');
+          title.textContent = station[0];
+          const code = document.createElement('small');
+          code.textContent = station[1] + ' · ' + station[2];
+          btn.append(title, code);
+          btn.addEventListener('mousedown', e => e.preventDefault());
+          btn.addEventListener('click', () => choose(station));
+          list.append(btn);
+        });
+
+        list.hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+      }
+
+      input.addEventListener('input', render);
+      input.addEventListener('focus', render);
+      input.addEventListener('keydown', e => {
+        if (list.hidden) return;
+        const btns = [...list.querySelectorAll('button')];
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          selected = (selected + (e.key === 'ArrowDown' ? 1 : -1) + btns.length) % btns.length;
+          btns.forEach((b, i) => b.classList.toggle('active', i === selected));
+          btns[selected]?.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'Enter' && selected >= 0) {
+          e.preventDefault();
+          choose(options[selected]);
+        } else if (e.key === 'Escape') hide();
+      });
+
+      document.addEventListener('click', e => {
+        if (!input.parentElement.contains(e.target)) hide();
+      });
+    }
+
+    rqAutocomplete('source');
+    rqAutocomplete('destination');
+
+    $('swapStations').addEventListener('click', () => {
+      const a = $('source'), b = $('destination');
+      [a.value, b.value] = [b.value, a.value];
+      $('source-suggestions').hidden = true;
+      $('destination-suggestions').hidden = true;
+    });
+
+    const themeToggle = $('themeToggle');
+    function rqSetTheme(dark) {
+      document.body.classList.toggle('dark-theme', dark);
+      themeToggle.textContent = dark ? '☀️ Light Mode' : '🌙 Dark Mode';
+      themeToggle.setAttribute('aria-label', dark ? 'Switch light mode' : 'Switch dark mode');
+      try { localStorage.setItem('timetrack-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    }
+    let rqDark = false;
+    try { rqDark = localStorage.getItem('timetrack-theme') === 'dark'; } catch (e) {}
+    rqSetTheme(rqDark);
+    themeToggle.addEventListener('click', () => rqSetTheme(!document.body.classList.contains('dark-theme')));
+  </script>
+
+  <!-- GEMINI ASSISTANT CLIENT -->
+  <script>
+    function addAiBubble(message, who) {
+      const chat = $('aiChat');
+      const bubble = document.createElement('div');
+      bubble.className = 'ai-bubble ' + (who === 'user' ? 'ai-user' : 'ai-bot');
+      bubble.textContent = message;
+      chat.appendChild(bubble);
+      chat.scrollTop = chat.scrollHeight;
+      return bubble;
+    }
+
+    function askExample(message) {
+      showTab('ai');
+      $('aiQuestion').value = message;
+      $('aiForm').requestSubmit();
+    }
+
+    $('aiForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const input = $('aiQuestion');
+      const question = input.value.trim();
+      if (!question) return;
+
+      addAiBubble(question, 'user');
+      input.value = '';
+      const send = $('aiSend');
+      send.disabled = true;
+      send.textContent = 'Thinking…';
+      const pending = addAiBubble('Consulting TimeTrack Rail AI…', 'bot');
+
+      try {
+        const payload = await api('/api/assistant', post({ message: question }));
+        if (payload.error) throw new Error(payload.error);
+        pending.textContent = payload.reply || 'No response returned.';
+      } catch (err) {
+        pending.textContent = clientFallbackAssistant(question);
+      } finally {
+        send.disabled = false;
+        send.textContent = 'Send ↗';
+        input.focus();
+      }
+    });
+  </script>
+
+  <!-- DEMO BOOKINGS CLIENT -->
+  <script>
+    async function loadBookings() {
+      const c = $('bookingList');
+      const d = await api('/api/bookings');
+      c.replaceChildren();
+      if (d.error) { c.textContent = 'Sign in to see demo bookings.'; return; }
+      if (!d.bookings || !d.bookings.length) { c.textContent = 'No demo bookings yet.'; return; }
+
+      for (const b of d.bookings) {
+        const row = document.createElement('div');
+        row.className = 'history-item';
+        row.style.cssText = 'display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between';
+
+        const t = document.createElement('span');
+        t.style.whiteSpace = 'pre-line';
+        t.textContent = `${b.reference} • ${b.status}\n${b.source} → ${b.destination} • ${b.journey_date}\n${b.passenger_name} (${b.passenger_age}y, ${b.passenger_gender}) • Train ${b.train_number} • Class ${b.travel_class}\nDEMO SIMULATION — NOT A VALID RAILWAY TICKET`;
+        row.append(t);
+
+        if (b.status === 'DEMO CONFIRMED') {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'small-btn';
+          btn.textContent = 'Cancel Demo';
+          btn.onclick = async () => {
+            if (!confirm('Cancel this demo booking?')) return;
+            const r = await api('/api/bookings/' + b.id, { method: 'DELETE' });
+            if (r.error) alert(r.error);
+            loadBookings();
+          };
+          row.append(btn);
+        }
+        c.append(row);
+      }
+    }
+
+    $('demoBookingForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const d = await api('/api/bookings/demo', post({
+        source: $('bookFrom').value,
+        destination: $('bookTo').value,
+        journey_date: $('bookDate').value,
+        train_number: $('bookTrain').value,
+        travel_class: $('bookClass').value,
+        passenger_name: $('bookName').value,
+        passenger_age: Number($('bookAge').value),
+        passenger_gender: $('bookGender').value
+      }));
+      show('bookingResult', d.error || `${d.message}\nReference: ${d.reference}`);
+      if (!d.error) loadBookings();
+    });
+
+    function showToast(msg) {
+      const t = $('toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+  </script>
+
+  <div id="toast" class="toast"></div>
+</body>
+</html>
