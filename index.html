@@ -906,6 +906,185 @@
     .reveal.visible { opacity: 1; transform: none; }
     @keyframes float { 50% { transform: translateY(-14px); } }
 
+    /* Persona Selector Pills */
+    .persona-field { margin-top: 4px; }
+    .persona-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .persona-status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: #126357;
+      background: #dbf4ee;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .persona-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .persona-pill {
+      background: #ffffff;
+      border: 1.5px solid #d7e0e8;
+      border-radius: 24px;
+      padding: 9px 15px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #2b425b;
+      transition: all .2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .persona-pill:hover {
+      border-color: #2bb197;
+      background: #f0fbf8;
+      transform: translateY(-1px);
+    }
+    .persona-pill.active {
+      background: linear-gradient(120deg, #10263f, #1b536b);
+      border-color: #10263f;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 38, 63, 0.18);
+    }
+
+    /* Live Delay Stress-Test Simulator */
+    .delay-sim-box {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 1.5px solid #f59e0b;
+      border-radius: 18px;
+      padding: 18px 22px;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.12);
+      margin-bottom: 6px;
+    }
+    .delay-sim-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .delay-sim-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: #78350f;
+    }
+    .delay-sim-sub {
+      font-size: 12px;
+      color: #92400e;
+      font-weight: 500;
+      margin-left: 6px;
+    }
+    .delay-badge {
+      font-weight: 800;
+      font-size: 12.5px;
+      padding: 5px 14px;
+      border-radius: 30px;
+      transition: all .2s ease;
+    }
+    .delay-badge-ontime { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+    .delay-badge-delayed { background: #fef08a; color: #854d0e; border: 1px solid #facc15; }
+    .delay-badge-severe { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+    .delay-slider-container { margin-top: 14px; }
+    .delay-slider-container input[type="range"] {
+      width: 100%;
+      accent-color: #d97706;
+      height: 8px;
+      cursor: pointer;
+    }
+    .delay-ticks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #92400e;
+      margin-top: 6px;
+    }
+
+    /* Visual Buffer Timeline Bar */
+    .visual-buffer-wrap {
+      margin: 14px 0 10px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+    }
+    .visual-buffer-track {
+      display: flex;
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e2e8f0;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .visual-bar-segment {
+      height: 100%;
+      transition: width .3s ease;
+    }
+    .segment-ride { background: #3b82f6; }
+    .segment-transit { background: #8b5cf6; }
+    .segment-spare-Safe { background: #10b981; }
+    .segment-spare-Tight { background: #f59e0b; }
+    .segment-spare-Risky { background: #ea580c; }
+    .segment-spare-Missed { background: #dc2626; }
+
+    .visual-buffer-legend {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: #475569;
+      margin-top: 6px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* Share & Calendar Buttons */
+    .btn-calendar {
+      background: #f1f5f9;
+      color: #1e293b;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-weight: 800;
+      font-size: 13px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: .2s;
+    }
+    .btn-calendar:hover {
+      background: #e2e8f0;
+      transform: translateY(-2px);
+    }
+    .btn-share {
+      background: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-weight: 800;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .btn-share:hover {
+      background: #dcfce7;
+      transform: translateY(-2px);
+    }
+
     /* Theme Toggle & Dark Theme */
     .theme-toggle {
       position: fixed;
@@ -1321,6 +1500,20 @@
     body.dark-theme .node-station { color: #dbeafe; }
     body.dark-theme .btn-copy-itinerary { background: #13273e; color: #cbd5e1; border-color: #274567; }
     body.dark-theme .btn-copy-itinerary:hover { background: #1c3654; color: #ffffff; }
+    body.dark-theme .persona-pill { background: #12243a; border-color: #274567; color: #dbeafe; }
+    body.dark-theme .persona-pill:hover { background: #1b3552; border-color: #38bdf8; }
+    body.dark-theme .persona-pill.active { background: linear-gradient(120deg, #1e40af, #0f766e); border-color: #38bdf8; color: #ffffff; }
+    body.dark-theme .persona-status-pill { background: #134e48; color: #99f6e4; }
+    body.dark-theme .delay-sim-box { background: #1e190b; border-color: #b45309; }
+    body.dark-theme .delay-sim-title { color: #fef3c7; }
+    body.dark-theme .delay-sim-sub { color: #fde68a; }
+    body.dark-theme .delay-ticks { color: #fde68a; }
+    body.dark-theme .visual-buffer-wrap { background: #0c1a2d; border-color: #1e3a5f; }
+    body.dark-theme .visual-buffer-legend { color: #94a3b8; }
+    body.dark-theme .btn-calendar { background: #172a42; color: #e2e8f0; border-color: #334e68; }
+    body.dark-theme .btn-calendar:hover { background: #213b5a; color: #ffffff; }
+    body.dark-theme .btn-share { background: #0f2e22; color: #86efac; border-color: #166534; }
+    body.dark-theme .btn-share:hover { background: #14402f; color: #bbf7d0; }
 
     @media(max-width: 1000px) {
       .navlinks { display: none; }
@@ -1351,18 +1544,19 @@
 </head>
 <body>
 
-  <!-- ROUND 2 EVALUATOR MODE BAR -->
+  <!-- ROUND 3 GRAND FINALE EVALUATOR MODE BAR -->
   <div class="evaluator-bar">
     <div class="evaluator-bar-inner">
       <div class="evaluator-title">
-        <span class="evaluator-badge">Round 2 Evaluator Bar</span>
-        <span><b>FirstCommit '26 Hackathon:</b> Live Deadline-First Train Search</span>
+        <span class="evaluator-badge">🏆 GRAND FINALE EVALUATOR BAR</span>
+        <span><b>FirstCommit '26 Hackathon:</b> Round 3 Grand Finale Edition</span>
       </div>
       <div class="evaluator-quick-chips">
         <button type="button" onclick="applyPitchPreset()" class="eval-chip active-chip">🎯 1-Click Pitch: Pune &rarr; CSMT (12 PM, 45m)</button>
         <button type="button" onclick="applyQuickPreset('New Delhi (NDLS)', 'Kanpur Central (CNB)', '12:00', 40)" class="eval-chip">📍 Delhi &rarr; Kanpur</button>
-        <button type="button" onclick="applyQuickPreset('Patna Jn (PNBE)', 'New Delhi (NDLS)', '09:00', 60)" class="eval-chip">📍 Patna &rarr; Delhi</button>
-        <button type="button" onclick="applyQuickPreset('Howrah Jn (HWH)', 'Bhubaneswar (BBS)', '14:00', 40)" class="eval-chip">📍 Howrah &rarr; BBS</button>
+        <button type="button" onclick="applyQuickPreset('Kota Jn (KOTA)', 'New Delhi (NDLS)', '10:00', 25, 'exam')" class="eval-chip">🎓 Kota &rarr; Delhi (JEE Exam)</button>
+        <button type="button" onclick="applyQuickPreset('Patna Jn (PNBE)', 'New Delhi (NDLS)', '09:00', 60, 'interview')" class="eval-chip">📍 Patna &rarr; Delhi</button>
+        <button type="button" onclick="applyQuickPreset('Ahmedabad Jn (ADI)', 'Mumbai Central (MMCT)', '22:00', 20)" class="eval-chip">📍 Ahmedabad &rarr; Mumbai</button>
         <button type="button" onclick="document.getElementById('uspSection').scrollIntoView({behavior:'smooth'})" class="eval-chip usp-chip">💡 Compare USP</button>
       </div>
     </div>
@@ -1381,7 +1575,7 @@
       <button class="nav-cta" onclick="showTab('pnr')">🎫 Check PNR ↗</button>
     </nav>
     <div class="hero-content">
-      <div class="eyebrow"><b></b> DEADLINE-FIRST TRAIN DISCOVERY • FIRSTCOMMIT '26 ROUND 2</div>
+      <div class="eyebrow"><b></b> DEADLINE-FIRST TRAIN DISCOVERY • FIRSTCOMMIT '26 GRAND FINALE WINNER EDITION</div>
       <h1>Arrive before<br/><em>it matters.</em></h1>
       <div class="hero-sub">Plan train journeys around your venue deadline instead of departure times. Perfect for exam candidates, interviewees, and patients.</div>
       <div class="hero-actions">
@@ -1499,8 +1693,14 @@
             <button type="button" class="demo-chip-btn" onclick="applyQuickPreset('New Delhi (NDLS)', 'Kanpur Central (CNB)', '12:00', 40)">
               📍 Delhi &rarr; Kanpur (12:00 PM, 40m)
             </button>
-            <button type="button" class="demo-chip-btn" onclick="applyQuickPreset('KSR Bengaluru (SBC)', 'MGR Chennai Central (MAS)', '13:00', 45)">
+            <button type="button" class="demo-chip-btn" onclick="applyQuickPreset('Kota Jn (KOTA)', 'New Delhi (NDLS)', '10:00', 25, 'exam')">
+              🎓 Kota &rarr; Delhi (JEE/NEET Exam +30m Buffer)
+            </button>
+            <button type="button" class="demo-chip-btn" onclick="applyQuickPreset('KSR Bengaluru (SBC)', 'MGR Chennai Central (MAS)', '13:00', 45, 'interview')">
               📍 Bengaluru &rarr; Chennai (01:00 PM, 45m)
+            </button>
+            <button type="button" class="demo-chip-btn" onclick="applyQuickPreset('Ahmedabad Jn (ADI)', 'Mumbai Central (MMCT)', '22:00', 20)">
+              📍 Ahmedabad &rarr; Mumbai (10:00 PM, 20m)
             </button>
             <button type="button" class="demo-chip-btn" onclick="applyQuickPreset('Patna Jn (PNBE)', 'New Delhi (NDLS)', '09:00', 60)">
               📍 Patna &rarr; Delhi (09:00 AM, 60m)
@@ -1552,6 +1752,30 @@
                 </select>
               </div>
             </div>
+
+            <!-- SMART PERSONA SELECTOR PILLS -->
+            <div class="field wide persona-field">
+              <div class="persona-label-row">
+                <label>Target Commitment &amp; Mandatory Reporting Buffer</label>
+                <span class="persona-status-pill" id="personaBufferNote">Applied: +0m standard transit</span>
+              </div>
+              <div class="persona-pills" id="personaPills">
+                <button type="button" class="persona-pill active" data-persona="standard" onclick="selectPersona('standard', this)">
+                  🚆 Standard (+0m)
+                </button>
+                <button type="button" class="persona-pill" data-persona="exam" onclick="selectPersona('exam', this)">
+                  🎓 Exam Centre (+30m gate buffer)
+                </button>
+                <button type="button" class="persona-pill" data-persona="interview" onclick="selectPersona('interview', this)">
+                  💼 Job Interview (+20m check-in)
+                </button>
+                <button type="button" class="persona-pill" data-persona="hospital" onclick="selectPersona('hospital', this)">
+                  🏥 Hospital OPD (+25m registration)
+                </button>
+              </div>
+              <input type="hidden" id="selectedPersona" value="standard" />
+            </div>
+
             <div class="field wide">
               <label>Travel Time from Station to Venue (mins)</label>
               <input id="venueTravelInput" max="360" min="0" type="number" value="45" required placeholder="e.g. 45"/>
@@ -1720,207 +1944,330 @@
     }
 
     const CLIENT_SEED_TRAINS = [
+      # 1. Pune Jn (PUNE) -> Mumbai CSMT (CSMT)
       {
         train_number: "11010", train_name: "Sinhagad Express",
         source_code: "PUNE", source_name: "Pune Jn",
         dest_code: "CSMT", dest_name: "Mumbai CSMT",
-        dep_time: "06:05", arr_time: "09:55", days: "Daily",
+        dep_time: "06:05", arr_time: "09:55", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
         classes: ["CC", "2S"],
         stops: [
-          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "06:05", day: 1},
-          {station: "Shivajinagar (SVJR)", arr: "06:11", dep: "06:13", day: 1},
-          {station: "Pimpri (PMP)", arr: "06:23", dep: "06:25", day: 1},
-          {station: "Chinchwad (CCH)", arr: "06:29", dep: "06:30", day: 1},
-          {station: "Lonavala (LNL)", arr: "07:08", dep: "07:10", day: 1},
-          {station: "Karjat (KJT)", arr: "07:58", dep: "08:00", day: 1},
-          {station: "Kalyan Jn (KYN)", arr: "08:42", dep: "08:45", day: 1},
-          {station: "Dadar Central (DR)", arr: "09:30", dep: "09:33", day: 1},
-          {station: "Mumbai CSMT (CSMT)", arr: "09:55", dep: "Ends", day: 1}
+          {code: "PUNE", station: "Pune Jn (PUNE)", arr: "Starts", dep: "06:05", day: 1},
+          {code: "SVJR", station: "Shivajinagar (SVJR)", arr: "06:11", dep: "06:13", day: 1},
+          {code: "PMP", station: "Pimpri (PMP)", arr: "06:23", dep: "06:25", day: 1},
+          {code: "CCH", station: "Chinchwad (CCH)", arr: "06:29", dep: "06:30", day: 1},
+          {code: "LNL", station: "Lonavala (LNL)", arr: "07:08", dep: "07:10", day: 1},
+          {code: "KJT", station: "Karjat (KJT)", arr: "07:58", dep: "08:00", day: 1},
+          {code: "KYN", station: "Kalyan Jn (KYN)", arr: "08:42", dep: "08:45", day: 1},
+          {code: "DR", station: "Dadar Central (DR)", arr: "09:30", dep: "09:33", day: 1},
+          {code: "CSMT", station: "Mumbai CSMT (CSMT)", arr: "09:55", dep: "Ends", day: 1}
         ]
       },
       {
         train_number: "12124", train_name: "Deccan Queen SF Express",
         source_code: "PUNE", source_name: "Pune Jn",
         dest_code: "CSMT", dest_name: "Mumbai CSMT",
-        dep_time: "07:15", arr_time: "10:25", days: "Daily",
+        dep_time: "07:15", arr_time: "10:25", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
         classes: ["CC", "2S"],
         stops: [
-          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "07:15", day: 1},
-          {station: "Shivajinagar (SVJR)", arr: "07:20", dep: "07:22", day: 1},
-          {station: "Lonavala (LNL)", arr: "08:13", dep: "08:15", day: 1},
-          {station: "Karjat (KJT)", arr: "08:58", dep: "09:00", day: 1},
-          {station: "Dadar Central (DR)", arr: "10:02", dep: "10:05", day: 1},
-          {station: "Mumbai CSMT (CSMT)", arr: "10:25", dep: "Ends", day: 1}
+          {code: "PUNE", station: "Pune Jn (PUNE)", arr: "Starts", dep: "07:15", day: 1},
+          {code: "SVJR", station: "Shivajinagar (SVJR)", arr: "07:20", dep: "07:22", day: 1},
+          {code: "LNL", station: "Lonavala (LNL)", arr: "08:13", dep: "08:15", day: 1},
+          {code: "KJT", station: "Karjat (KJT)", arr: "08:58", dep: "09:00", day: 1},
+          {code: "DR", station: "Dadar Central (DR)", arr: "10:02", dep: "10:05", day: 1},
+          {code: "CSMT", station: "Mumbai CSMT (CSMT)", arr: "10:25", dep: "Ends", day: 1}
         ]
       },
       {
         train_number: "11008", train_name: "Deccan Express",
         source_code: "PUNE", source_name: "Pune Jn",
         dest_code: "CSMT", dest_name: "Mumbai CSMT",
-        dep_time: "15:15", arr_time: "19:05", days: "Daily",
+        dep_time: "15:15", arr_time: "19:05", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
         classes: ["CC", "2S"],
         stops: [
-          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "15:15", day: 1},
-          {station: "Khadki (KK)", arr: "15:23", dep: "15:25", day: 1},
-          {station: "Talegaon (TGN)", arr: "15:48", dep: "15:50", day: 1},
-          {station: "Lonavala (LNL)", arr: "16:18", dep: "16:20", day: 1},
-          {station: "Kalyan Jn (KYN)", arr: "17:52", dep: "17:55", day: 1},
-          {station: "Dadar Central (DR)", arr: "18:40", dep: "18:43", day: 1},
-          {station: "Mumbai CSMT (CSMT)", arr: "19:05", dep: "Ends", day: 1}
+          {code: "PUNE", station: "Pune Jn (PUNE)", arr: "Starts", dep: "15:15", day: 1},
+          {code: "KK", station: "Khadki (KK)", arr: "15:23", dep: "15:25", day: 1},
+          {code: "TGN", station: "Talegaon (TGN)", arr: "15:48", dep: "15:50", day: 1},
+          {code: "LNL", station: "Lonavala (LNL)", arr: "16:18", dep: "16:20", day: 1},
+          {code: "KYN", station: "Kalyan Jn (KYN)", arr: "17:52", dep: "17:55", day: 1},
+          {code: "DR", station: "Dadar Central (DR)", arr: "18:40", dep: "18:43", day: 1},
+          {code: "CSMT", station: "Mumbai CSMT (CSMT)", arr: "19:05", dep: "Ends", day: 1}
         ]
       },
       {
         train_number: "12128", train_name: "Pune - Mumbai Intercity SF",
         source_code: "PUNE", source_name: "Pune Jn",
         dest_code: "CSMT", dest_name: "Mumbai CSMT",
-        dep_time: "17:55", arr_time: "21:05", days: "Daily",
+        dep_time: "17:55", arr_time: "21:05", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
         classes: ["CC", "2S"],
         stops: [
-          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "17:55", day: 1},
-          {station: "Shivajinagar (SVJR)", arr: "18:02", dep: "18:04", day: 1},
-          {station: "Lonavala (LNL)", arr: "18:53", dep: "18:55", day: 1},
-          {station: "Thane (TNA)", arr: "20:18", dep: "20:20", day: 1},
-          {station: "Dadar Central (DR)", arr: "20:42", dep: "20:45", day: 1},
-          {station: "Mumbai CSMT (CSMT)", arr: "21:05", dep: "Ends", day: 1}
+          {code: "PUNE", station: "Pune Jn (PUNE)", arr: "Starts", dep: "17:55", day: 1},
+          {code: "SVJR", station: "Shivajinagar (SVJR)", arr: "18:02", dep: "18:04", day: 1},
+          {code: "LNL", station: "Lonavala (LNL)", arr: "18:53", dep: "18:55", day: 1},
+          {code: "TNA", station: "Thane (TNA)", arr: "20:18", dep: "20:20", day: 1},
+          {code: "DR", station: "Dadar Central (DR)", arr: "20:42", dep: "20:45", day: 1},
+          {code: "CSMT", station: "Mumbai CSMT (CSMT)", arr: "21:05", dep: "Ends", day: 1}
         ]
       },
+      # 2. Mumbai CSMT (CSMT) -> Pune Jn (PUNE)
       {
-        train_number: "22106", train_name: "Indrayani SF Express",
-        source_code: "PUNE", source_name: "Pune Jn",
-        dest_code: "CSMT", dest_name: "Mumbai CSMT",
-        dep_time: "18:35", arr_time: "21:55", days: "Daily",
+        train_number: "12127", train_name: "Mumbai - Pune Intercity SF",
+        source_code: "CSMT", source_name: "Mumbai CSMT",
+        dest_code: "PUNE", dest_name: "Pune Jn",
+        dep_time: "06:40", arr_time: "09:57", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
         classes: ["CC", "2S"],
         stops: [
-          {station: "Pune Jn (PUNE)", arr: "Starts", dep: "18:35", day: 1},
-          {station: "Shivajinagar (SVJR)", arr: "18:42", dep: "18:44", day: 1},
-          {station: "Lonavala (LNL)", arr: "19:33", dep: "19:35", day: 1},
-          {station: "Karjat (KJT)", arr: "20:18", dep: "20:20", day: 1},
-          {station: "Kalyan Jn (KYN)", arr: "20:57", dep: "21:00", day: 1},
-          {station: "Dadar Central (DR)", arr: "21:34", dep: "21:37", day: 1},
-          {station: "Mumbai CSMT (CSMT)", arr: "21:55", dep: "Ends", day: 1}
+          {code: "CSMT", station: "Mumbai CSMT (CSMT)", arr: "Starts", dep: "06:40", day: 1},
+          {code: "DR", station: "Dadar Central (DR)", arr: "06:50", dep: "06:52", day: 1},
+          {code: "TNA", station: "Thane (TNA)", arr: "07:13", dep: "07:15", day: 1},
+          {code: "LNL", station: "Lonavala (LNL)", arr: "08:53", dep: "08:55", day: 1},
+          {code: "SVJR", station: "Shivajinagar (SVJR)", arr: "09:38", dep: "09:40", day: 1},
+          {code: "PUNE", station: "Pune Jn (PUNE)", arr: "09:57", dep: "Ends", day: 1}
         ]
       },
+      # 3. New Delhi (NDLS) -> Kanpur Central (CNB)
       {
         train_number: "22436", train_name: "Varanasi Vande Bharat Exp",
         source_code: "NDLS", source_name: "New Delhi",
         dest_code: "CNB", dest_name: "Kanpur Central",
-        dep_time: "06:00", arr_time: "10:08", days: "Daily (Ex Thu)",
+        dep_time: "06:00", arr_time: "10:08", days: "Mon,Tue,Wed,Fri,Sat,Sun",
         classes: ["CC", "EC"],
         stops: [
-          {station: "New Delhi (NDLS)", arr: "Starts", dep: "06:00", day: 1},
-          {station: "Kanpur Central (CNB)", arr: "10:08", dep: "Ends", day: 1}
+          {code: "NDLS", station: "New Delhi (NDLS)", arr: "Starts", dep: "06:00", day: 1},
+          {code: "CNB", station: "Kanpur Central (CNB)", arr: "10:08", dep: "Ends", day: 1}
         ]
       },
       {
         train_number: "12004", train_name: "Lucknow Swarna Shatabdi",
         source_code: "NDLS", source_name: "New Delhi",
         dest_code: "CNB", dest_name: "Kanpur Central",
-        dep_time: "06:10", arr_time: "11:20", days: "Daily",
+        dep_time: "06:10", arr_time: "11:20", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
         classes: ["CC", "EC"],
         stops: [
-          {station: "New Delhi (NDLS)", arr: "Starts", dep: "06:10", day: 1},
-          {station: "Ghaziabad (GZB)", arr: "06:38", dep: "06:40", day: 1},
-          {station: "Aligarh Jn (ALJN)", arr: "07:50", dep: "07:52", day: 1},
-          {station: "Tundla Jn (TDL)", arr: "08:50", dep: "08:52", day: 1},
-          {station: "Etawah Jn (ETW)", arr: "09:48", dep: "09:50", day: 1},
-          {station: "Kanpur Central (CNB)", arr: "11:20", dep: "Ends", day: 1}
+          {code: "NDLS", station: "New Delhi (NDLS)", arr: "Starts", dep: "06:10", day: 1},
+          {code: "GZB", station: "Ghaziabad (GZB)", arr: "06:38", dep: "06:40", day: 1},
+          {code: "ALJN", station: "Aligarh Jn (ALJN)", arr: "07:50", dep: "07:52", day: 1},
+          {code: "ETW", station: "Etawah Jn (ETW)", arr: "09:48", dep: "09:50", day: 1},
+          {code: "CNB", station: "Kanpur Central (CNB)", arr: "11:20", dep: "Ends", day: 1}
         ]
       },
+      # 4. KSR Bengaluru (SBC) -> MGR Chennai Central (MAS)
       {
         train_number: "12008", train_name: "MGR Chennai Central Shatabdi",
         source_code: "SBC", source_name: "KSR Bengaluru",
         dest_code: "MAS", dest_name: "MGR Chennai Central",
-        dep_time: "06:00", arr_time: "11:00", days: "Daily (Ex Tue)",
+        dep_time: "06:00", arr_time: "11:00", days: "Mon,Wed,Thu,Fri,Sat,Sun",
         classes: ["CC", "EC"],
         stops: [
-          {station: "KSR Bengaluru (SBC)", arr: "Starts", dep: "06:00", day: 1},
-          {station: "Katpadi Jn (KPD)", arr: "09:08", dep: "09:10", day: 1},
-          {station: "MGR Chennai Central (MAS)", arr: "11:00", dep: "Ends", day: 1}
+          {code: "SBC", station: "KSR Bengaluru (SBC)", arr: "Starts", dep: "06:00", day: 1},
+          {code: "KPD", station: "Katpadi Jn (KPD)", arr: "09:08", dep: "09:10", day: 1},
+          {code: "MAS", station: "MGR Chennai Central (MAS)", arr: "11:00", dep: "Ends", day: 1}
         ]
       },
       {
         train_number: "12608", train_name: "Lalbagh SF Express",
         source_code: "SBC", source_name: "KSR Bengaluru",
         dest_code: "MAS", dest_name: "MGR Chennai Central",
-        dep_time: "06:25", arr_time: "12:15", days: "Daily",
+        dep_time: "06:25", arr_time: "12:15", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
         classes: ["CC", "2S"],
         stops: [
-          {station: "KSR Bengaluru (SBC)", arr: "Starts", dep: "06:25", day: 1},
-          {station: "Bangarapet (BWT)", arr: "07:28", dep: "07:30", day: 1},
-          {station: "Katpadi Jn (KPD)", arr: "09:48", dep: "09:50", day: 1},
-          {station: "Arakkonam Jn (AJJ)", arr: "10:48", dep: "10:50", day: 1},
-          {station: "MGR Chennai Central (MAS)", arr: "12:15", dep: "Ends", day: 1}
+          {code: "SBC", station: "KSR Bengaluru (SBC)", arr: "Starts", dep: "06:25", day: 1},
+          {code: "BWT", station: "Bangarapet (BWT)", arr: "07:28", dep: "07:30", day: 1},
+          {code: "KPD", station: "Katpadi Jn (KPD)", arr: "09:48", dep: "09:50", day: 1},
+          {code: "AJJ", station: "Arakkonam Jn (AJJ)", arr: "10:48", dep: "10:50", day: 1},
+          {code: "MAS", station: "MGR Chennai Central (MAS)", arr: "12:15", dep: "Ends", day: 1}
         ]
       },
+      # 5. Patna Jn (PNBE) -> New Delhi (NDLS)
       {
-        train_number: "12393", train_name: "Sampoorna Kranti Express",
+        train_number: "12309", train_name: "Rajendra Nagar Rajdhani Exp",
         source_code: "PNBE", source_name: "Patna Jn",
         dest_code: "NDLS", dest_name: "New Delhi",
-        dep_time: "19:25", arr_time: "07:55", days: "Daily",
-        classes: ["1A", "2A", "3A", "SL"],
-        stops: [
-          {station: "Patna Jn (PNBE)", arr: "Starts", dep: "19:25", day: 1},
-          {station: "Ara Jn (ARA)", arr: "20:03", dep: "20:05", day: 1},
-          {station: "Buxar (BXR)", arr: "20:53", dep: "20:55", day: 1},
-          {station: "Pt DD Upadhyaya Jn (DDU)", arr: "22:22", dep: "22:32", day: 1},
-          {station: "Kanpur Central (CNB)", arr: "02:25", dep: "02:30", day: 2},
-          {station: "New Delhi (NDLS)", arr: "07:55", dep: "Ends", day: 2}
-        ]
-      },
-      {
-        train_number: "12309", train_name: "Rajendra Nagar - New Delhi Tejas Rajdhani",
-        source_code: "PNBE", source_name: "Patna Jn",
-        dest_code: "NDLS", dest_name: "New Delhi",
-        dep_time: "19:35", arr_time: "07:40", days: "Daily",
+        dep_time: "19:35", arr_time: "07:40", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
         classes: ["1A", "2A", "3A"],
         stops: [
-          {station: "Patna Jn (PNBE)", arr: "Starts", dep: "19:35", day: 1},
-          {station: "Pt DD Upadhyaya Jn (DDU)", arr: "22:10", dep: "22:20", day: 1},
-          {station: "Prayagraj Jn (PRYJ)", arr: "00:10", dep: "00:12", day: 2},
-          {station: "Kanpur Central (CNB)", arr: "02:15", dep: "02:20", day: 2},
-          {station: "New Delhi (NDLS)", arr: "07:40", dep: "Ends", day: 2}
+          {code: "PNBE", station: "Patna Jn (PNBE)", arr: "Starts", dep: "19:35", day: 1},
+          {code: "DDU", station: "Pt DD Upadhyaya Jn (DDU)", arr: "22:12", dep: "22:22", day: 1},
+          {code: "PRYJ", station: "Prayagraj Jn (PRYJ)", arr: "00:10", dep: "00:12", day: 2},
+          {code: "CNB", station: "Kanpur Central (CNB)", arr: "02:15", dep: "02:20", day: 2},
+          {code: "NDLS", station: "New Delhi (NDLS)", arr: "07:40", dep: "Ends", day: 2}
         ]
       },
       {
-        train_number: "22895", train_name: "Howrah - Puri Vande Bharat Express",
+        train_number: "12393", train_name: "Sampoorna Kranti SF Exp",
+        source_code: "PNBE", source_name: "Patna Jn",
+        dest_code: "NDLS", dest_name: "New Delhi",
+        dep_time: "19:25", arr_time: "07:55", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
+        classes: ["1A", "2A", "3A", "SL"],
+        stops: [
+          {code: "PNBE", station: "Patna Jn (PNBE)", arr: "Starts", dep: "19:25", day: 1},
+          {code: "ARA", station: "Ara Jn (ARA)", arr: "20:02", dep: "20:04", day: 1},
+          {code: "DDU", station: "Pt DD Upadhyaya Jn (DDU)", arr: "22:22", dep: "22:32", day: 1},
+          {code: "CNB", station: "Kanpur Central (CNB)", arr: "02:30", dep: "02:35", day: 2},
+          {code: "NDLS", station: "New Delhi (NDLS)", arr: "07:55", dep: "Ends", day: 2}
+        ]
+      },
+      # 6. Howrah Jn (HWH) -> Bhubaneswar (BBS)
+      {
+        train_number: "22895", train_name: "Howrah - Puri Vande Bharat",
         source_code: "HWH", source_name: "Howrah Jn",
         dest_code: "BBS", dest_name: "Bhubaneswar",
-        dep_time: "06:10", arr_time: "12:20", days: "Daily (Ex Thu)",
+        dep_time: "06:10", arr_time: "11:10", days: "Mon,Tue,Wed,Fri,Sat,Sun",
         classes: ["CC", "EC"],
         stops: [
-          {station: "Howrah Jn (HWH)", arr: "Starts", dep: "06:10", day: 1},
-          {station: "Kharagpur Jn (KGP)", arr: "07:38", dep: "07:40", day: 1},
-          {station: "Balasore (BLS)", arr: "09:01", dep: "09:03", day: 1},
-          {station: "Bhadrak (BHC)", arr: "09:53", dep: "09:55", day: 1},
-          {station: "Jajpur Keonjhar Road (JJKR)", arr: "10:23", dep: "10:25", day: 1},
-          {station: "Cuttack Jn (CTC)", arr: "11:22", dep: "11:24", day: 1},
-          {station: "Bhubaneswar (BBS)", arr: "12:20", dep: "Ends", day: 1}
+          {code: "HWH", station: "Howrah Jn (HWH)", arr: "Starts", dep: "06:10", day: 1},
+          {code: "KGP", station: "Kharagpur Jn (KGP)", arr: "07:38", dep: "07:40", day: 1},
+          {code: "BLS", station: "Balasore (BLS)", arr: "08:50", dep: "08:52", day: 1},
+          {code: "CTC", station: "Cuttack Jn (CTC)", arr: "10:35", dep: "10:37", day: 1},
+          {code: "BBS", station: "Bhubaneswar (BBS)", arr: "11:10", dep: "Ends", day: 1}
         ]
       },
       {
-        train_number: "12073", train_name: "Howrah - Bhubaneswar Jan Shatabdi Express",
+        train_number: "12073", train_name: "Howrah - Bhubaneswar Jan Shatabdi",
         source_code: "HWH", source_name: "Howrah Jn",
         dest_code: "BBS", dest_name: "Bhubaneswar",
-        dep_time: "13:25", arr_time: "20:00", days: "Daily (Ex Sun)",
+        dep_time: "13:25", arr_time: "20:05", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
         classes: ["CC", "2S"],
         stops: [
-          {station: "Howrah Jn (HWH)", arr: "Starts", dep: "13:25", day: 1},
-          {station: "Kharagpur Jn (KGP)", arr: "15:00", dep: "15:05", day: 1},
-          {station: "Belda (BLDA)", arr: "15:35", dep: "15:36", day: 1},
-          {station: "Jaleswar (JER)", arr: "16:00", dep: "16:02", day: 1},
-          {station: "Balasore (BLS)", arr: "16:38", dep: "16:40", day: 1},
-          {station: "Soro (SORO)", arr: "17:08", dep: "17:10", day: 1},
-          {station: "Bhadrak (BHC)", arr: "17:58", dep: "18:00", day: 1},
-          {station: "Jajpur K Road (JJKR)", arr: "18:31", dep: "18:33", day: 1},
-          {station: "Cuttack Jn (CTC)", arr: "19:26", dep: "19:28", day: 1},
-          {station: "Bhubaneswar (BBS)", arr: "20:00", dep: "Ends", day: 1}
+          {code: "HWH", station: "Howrah Jn (HWH)", arr: "Starts", dep: "13:25", day: 1},
+          {code: "KGP", station: "Kharagpur Jn (KGP)", arr: "15:05", dep: "15:10", day: 1},
+          {code: "CTC", station: "Cuttack Jn (CTC)", arr: "19:15", dep: "19:20", day: 1},
+          {code: "BBS", station: "Bhubaneswar (BBS)", arr: "20:05", dep: "Ends", day: 1}
+        ]
+      },
+      # 7. Ahmedabad Jn (ADI) -> Mumbai Central (MMCT)
+      {
+        train_number: "20902", train_name: "Gandhinagar - Mumbai Vande Bharat",
+        source_code: "ADI", source_name: "Ahmedabad Jn",
+        dest_code: "MMCT", dest_name: "Mumbai Central",
+        dep_time: "14:40", arr_time: "20:15", days: "Mon,Tue,Thu,Fri,Sat,Sun",
+        classes: ["CC", "EC"],
+        stops: [
+          {code: "ADI", station: "Ahmedabad Jn (ADI)", arr: "Starts", dep: "14:40", day: 1},
+          {code: "BRC", station: "Vadodara Jn (BRC)", arr: "15:46", dep: "15:51", day: 1},
+          {code: "ST", station: "Surat (ST)", arr: "17:13", dep: "17:18", day: 1},
+          {code: "BVI", station: "Borivali (BVI)", arr: "19:33", dep: "19:36", day: 1},
+          {code: "MMCT", station: "Mumbai Central (MMCT)", arr: "20:15", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12010", train_name: "Ahmedabad - Mumbai Shatabdi",
+        source_code: "ADI", source_name: "Ahmedabad Jn",
+        dest_code: "MMCT", dest_name: "Mumbai Central",
+        dep_time: "15:10", arr_time: "21:35", days: "Mon,Tue,Wed,Thu,Fri,Sat",
+        classes: ["CC", "EC"],
+        stops: [
+          {code: "ADI", station: "Ahmedabad Jn (ADI)", arr: "Starts", dep: "15:10", day: 1},
+          {code: "BRC", station: "Vadodara Jn (BRC)", arr: "16:28", dep: "16:33", day: 1},
+          {code: "ST", station: "Surat (ST)", arr: "18:05", dep: "18:10", day: 1},
+          {code: "MMCT", station: "Mumbai Central (MMCT)", arr: "21:35", dep: "Ends", day: 1}
+        ]
+      },
+      # 8. Jaipur Jn (JP) -> New Delhi (NDLS)
+      {
+        train_number: "12016", train_name: "Ajmer - New Delhi Shatabdi",
+        source_code: "JP", source_name: "Jaipur Jn",
+        dest_code: "NDLS", dest_name: "New Delhi",
+        dep_time: "17:50", arr_time: "22:40", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
+        classes: ["CC", "EC"],
+        stops: [
+          {code: "JP", station: "Jaipur Jn (JP)", arr: "Starts", dep: "17:50", day: 1},
+          {code: "AWR", station: "Alwar Jn (AWR)", arr: "19:42", dep: "19:45", day: 1},
+          {code: "GGN", station: "Gurgaon (GGN)", arr: "21:43", dep: "21:45", day: 1},
+          {code: "NDLS", station: "New Delhi (NDLS)", arr: "22:40", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12985", train_name: "Jaipur - Delhi Double Decker",
+        source_code: "JP", source_name: "Jaipur Jn",
+        dest_code: "NDLS", dest_name: "New Delhi",
+        dep_time: "06:00", arr_time: "10:30", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
+        classes: ["CC", "EC"],
+        stops: [
+          {code: "JP", station: "Jaipur Jn (JP)", arr: "Starts", dep: "06:00", day: 1},
+          {code: "AWR", station: "Alwar Jn (AWR)", arr: "07:53", dep: "07:55", day: 1},
+          {code: "GGN", station: "Gurgaon (GGN)", arr: "09:44", dep: "09:46", day: 1},
+          {code: "NDLS", station: "New Delhi (NDLS)", arr: "10:30", dep: "Ends", day: 1}
+        ]
+      },
+      # 9. Secunderabad Jn (SC) -> Vijayawada Jn (BZA)
+      {
+        train_number: "20707", train_name: "Secunderabad - Visakhapatnam Vande Bharat",
+        source_code: "SC", source_name: "Secunderabad Jn",
+        dest_code: "BZA", dest_name: "Vijayawada Jn",
+        dep_time: "05:05", arr_time: "08:50", days: "Mon,Tue,Wed,Fri,Sat,Sun",
+        classes: ["CC", "EC"],
+        stops: [
+          {code: "SC", station: "Secunderabad Jn (SC)", arr: "Starts", dep: "05:05", day: 1},
+          {code: "WL", station: "Warangal (WL)", arr: "06:33", dep: "06:35", day: 1},
+          {code: "KMT", station: "Khammam (KMT)", arr: "07:38", dep: "07:40", day: 1},
+          {code: "BZA", station: "Vijayawada Jn (BZA)", arr: "08:50", dep: "Ends", day: 1}
+        ]
+      },
+      # 10. Kota Jn (KOTA) -> New Delhi (NDLS) - JEE/NEET Aspirant Corridor
+      {
+        train_number: "12059", train_name: "Kota - Hazrat Nizamuddin Jan Shatabdi",
+        source_code: "KOTA", source_name: "Kota Jn",
+        dest_code: "NDLS", dest_name: "New Delhi",
+        dep_time: "05:55", arr_time: "12:30", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
+        classes: ["CC", "2S"],
+        stops: [
+          {code: "KOTA", station: "Kota Jn (KOTA)", arr: "Starts", dep: "05:55", day: 1},
+          {code: "SWM", station: "Sawai Madhopur (SWM)", arr: "07:03", dep: "07:05", day: 1},
+          {code: "MTJ", station: "Mathura Jn (MTJ)", arr: "10:15", dep: "10:17", day: 1},
+          {code: "NDLS", station: "New Delhi (NDLS)", arr: "12:30", dep: "Ends", day: 1}
+        ]
+      },
+      {
+        train_number: "12951", train_name: "Mumbai - New Delhi Tejas Rajdhani",
+        source_code: "KOTA", source_name: "Kota Jn",
+        dest_code: "NDLS", dest_name: "New Delhi",
+        dep_time: "03:20", arr_time: "08:32", days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
+        classes: ["1A", "2A", "3A"],
+        stops: [
+          {code: "KOTA", station: "Kota Jn (KOTA)", arr: "03:15", dep: "03:20", day: 1},
+          {code: "NDLS", station: "New Delhi (NDLS)", arr: "08:32", dep: "Ends", day: 1}
         ]
       }
     ];
 
+    const CLIENT_DAY_MAP = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    function clientMatchSegmentStops(stops, srcCode, srcUpper, dstCode, dstUpper) {
+      let srcIdx = null, dstIdx = null;
+      for (let idx = 0; idx < stops.length; idx++) {
+        const s = stops[idx];
+        const sCode = (s.code || '').toUpperCase();
+        const sName = (s.station || '').toUpperCase();
+        if (srcIdx === null) {
+          if ((srcCode && (sCode === srcCode || srcCode === sName)) || (srcUpper && sName.includes(srcUpper))) {
+            srcIdx = idx;
+          }
+        } else if (srcIdx !== null) {
+          if ((dstCode && (sCode === dstCode || dstCode === sName)) || (dstUpper && sName.includes(dstUpper))) {
+            dstIdx = idx;
+            break;
+          }
+        }
+      }
+      if (srcIdx !== null && dstIdx !== null && dstIdx > srcIdx) {
+        return [stops[srcIdx], stops[dstIdx]];
+      }
+      return [null, null];
+    }
+
     function clientFallbackSearch(payload) {
-      const { source, destination, journey_date, deadline, venue_travel_minutes } = payload;
+      const { source, destination, journey_date, deadline, venue_travel_minutes, persona } = payload;
+      const personaKey = (persona || 'standard').toLowerCase();
+      const personaMap = {
+        standard: { label: 'Standard Transfer', extra_mins: 0 },
+        exam: { label: 'Exam Centre (Gate Closure +30m)', extra_mins: 30 },
+        interview: { label: 'Job Interview (Security/Check-in +20m)', extra_mins: 20 },
+        hospital: { label: 'Hospital OPD (Registration +25m)', extra_mins: 25 }
+      };
+      const activePersona = personaMap[personaKey] || personaMap.standard;
       const venueMins = Number(venue_travel_minutes) || 0;
+      const totalTransitMins = venueMins + activePersona.extra_mins;
       
       const clean = s => s.toUpperCase().replace(/\s+/g, ' ');
       const extractCode = s => {
@@ -1929,25 +2276,40 @@
       };
       const sCode = extractCode(source);
       const dCode = extractCode(destination);
-      const sRaw = clean(source);
-      const dRaw = clean(destination);
+      const sUpper = clean(source.split('(')[0] || source);
+      const dUpper = clean(destination.split('(')[0] || destination);
 
-      const matches = CLIENT_SEED_TRAINS.filter(t => {
-        const sMatch = t.source_code === sCode || clean(t.source_name).includes(sCode) || sRaw.includes(t.source_code) || sRaw.includes(clean(t.source_name));
-        const dMatch = t.dest_code === dCode || clean(t.dest_name).includes(dCode) || dRaw.includes(t.dest_code) || dRaw.includes(clean(t.dest_name));
-        return sMatch && dMatch;
-      });
+      const jDateObj = new Date(journey_date + 'T00:00:00');
+      const weekdayShort = !isNaN(jDateObj.getTime()) ? CLIENT_DAY_MAP[(jDateObj.getDay() + 6) % 7] : 'Mon';
 
       const [dHour, dMin] = deadline.split(':').map(Number);
       const deadlineTotalMins = dHour * 60 + dMin;
 
       const qualifying = [];
       const rejected = [];
+      let skippedDayCount = 0;
 
-      for (const t of matches) {
-        const [arrH, arrM] = t.arr_time.split(':').map(Number);
+      for (const t of CLIENT_SEED_TRAINS) {
+        const [boardStop, alightStop] = clientMatchSegmentStops(t.stops, sCode, sUpper, dCode, dUpper);
+        if (!boardStop || !alightStop) continue;
+
+        const operatingDays = t.days.split(',').map(d => d.trim());
+        if (!operatingDays.includes(weekdayShort)) {
+          skippedDayCount++;
+          continue;
+        }
+
+        const depStr = boardStop.dep !== 'Starts' ? boardStop.dep : t.dep_time;
+        const arrStr = alightStop.arr !== 'Ends' ? alightStop.arr : t.arr_time;
+
+        const [depH, depM] = depStr.split(':').map(Number);
+        const [arrH, arrM] = arrStr.split(':').map(Number);
+        
+        let rideMins = (arrH * 60 + arrM) - (depH * 60 + depM);
+        if (rideMins <= 0) rideMins += 1440; // Overnight train
+
         const arrTotalMins = arrH * 60 + arrM;
-        const venueArrivalTotalMins = arrTotalMins + venueMins;
+        const venueArrivalTotalMins = arrTotalMins + totalTransitMins;
         
         const venueH = Math.floor(venueArrivalTotalMins / 60) % 24;
         const venueM = venueArrivalTotalMins % 60;
@@ -1963,12 +2325,15 @@
         const item = {
           train_number: t.train_number,
           train_name: t.train_name,
-          source: `${t.source_name} (${t.source_code})`,
-          destination: `${t.dest_name} (${t.dest_code})`,
-          dep_time: t.dep_time,
-          arr_time: t.arr_time,
+          source: boardStop.station,
+          destination: alightStop.station,
+          dep_time: depStr,
+          arr_time: arrStr,
+          ride_minutes: rideMins,
           venue_arrival_time: venueArrivalStr,
           venue_travel_minutes: venueMins,
+          persona_extra_minutes: activePersona.extra_mins,
+          total_transit_minutes: totalTransitMins,
           spare_minutes: spareMinutes,
           risk_tag: risk_tag,
           days: t.days,
@@ -1985,10 +2350,10 @@
 
       let aiRec = '';
       if (!qualifying.length) {
-        aiRec = `No trains from ${source} to ${destination} reach in time for your ${deadline} deadline (accounting for ${venueMins} mins travel from the station to your venue). Consider travelling the evening before or choosing an earlier departure.`;
+        aiRec = `No trains from ${source} to ${destination} reach in time for your ${deadline} deadline after accounting for ${totalTransitMins} mins (${activePersona.label}). Consider travelling earlier or picking an overnight service.`;
       } else {
         const top = qualifying[0];
-        aiRec = `Take ${top.train_number} ${top.train_name} departing at ${top.dep_time} and arriving at ${top.arr_time}. After ${venueMins} mins to reach your venue, you will arrive at ${top.venue_arrival_time} — giving you ${top.spare_minutes} minutes to spare (${top.risk_tag} buffer).`;
+        aiRec = `Best Option: ${top.train_number} ${top.train_name} (Departs ${top.dep_time}, Arrives ${top.arr_time}). Including ${totalTransitMins} mins for ${activePersona.label}, you reach your venue at ${top.venue_arrival_time} — leaving ${top.spare_minutes} minutes of ${top.risk_tag} buffer before ${deadline}.`;
       }
 
       return {
@@ -1996,10 +2361,14 @@
         source: source,
         destination: destination,
         journey_date: journey_date,
+        weekday: weekdayShort,
         deadline: deadline,
+        persona: activePersona,
         venue_travel_minutes: venueMins,
+        total_transit_minutes: totalTransitMins,
         trains: qualifying,
         rejected_count: rejected.length,
+        skipped_day_count: skippedDayCount,
         ai_recommendation: aiRec,
         message: `Found ${qualifying.length} train(s) arriving before your ${deadline} deadline.`
       };
@@ -2140,15 +2509,37 @@
       }
     }
 
-    /* QUICK PRESETS & PITCH SCENARIO */
-    function applyPitchPreset() {
-      applyQuickPreset('Pune Jn (PUNE)', 'Mumbai CSMT (CSMT)', '12:00', 45);
+    /* PERSONA SELECTION */
+    function selectPersona(key, btn) {
+      $('selectedPersona').value = key;
+      document.querySelectorAll('.persona-pill').forEach(b => b.classList.remove('active'));
+      if (btn) {
+        btn.classList.add('active');
+      } else {
+        const matchingBtn = document.querySelector(`.persona-pill[data-persona="${key}"]`);
+        if (matchingBtn) matchingBtn.classList.add('active');
+      }
+      
+      const labelMap = {
+        standard: '+0m standard transit',
+        exam: '+30m mandatory exam gate closure buffer',
+        interview: '+20m corporate security & check-in buffer',
+        hospital: '+25m OPD registration & triage buffer'
+      };
+      const note = $('personaBufferNote');
+      if (note) note.textContent = `Applied: ${labelMap[key] || '+0m'}`;
     }
 
-    function applyQuickPreset(source, dest, deadline24, venueMins) {
+    /* QUICK PRESETS & PITCH SCENARIO */
+    function applyPitchPreset() {
+      applyQuickPreset('Pune Jn (PUNE)', 'Mumbai CSMT (CSMT)', '12:00', 45, 'standard');
+    }
+
+    function applyQuickPreset(source, dest, deadline24, venueMins, persona = 'standard') {
       $('source').value = source;
       $('destination').value = dest;
       $('venueTravelInput').value = venueMins;
+      selectPersona(persona);
       
       const [h, m] = deadline24.split(':').map(Number);
       const ampmVal = h >= 12 ? 'PM' : 'AM';
@@ -2173,6 +2564,52 @@
     ['hour12', 'minute12', 'ampm'].forEach(id => $(id).addEventListener('change', rqSyncTime));
 
     /* SEARCH SUBMISSION & RESULT RENDERING */
+    let lastSearchPayload = null;
+
+    function addMinutesToHHMM(hhmm, addMins) {
+      if (!hhmm || !hhmm.includes(':')) return hhmm;
+      const [h, m] = hhmm.split(':').map(Number);
+      const total = (h * 60 + m + addMins + 1440 * 2) % 1440;
+      return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+    }
+
+    function buildGoogleCalendarUrl(train, journeyDate, deadline, adjustedSpare) {
+      const title = encodeURIComponent(`Train ${train.train_number} ${train.train_name} (Deadline: ${deadline})`);
+      const dateCompact = (journeyDate || '').replaceAll('-', '');
+      const depCompact = (train.dep_time || '00:00').replace(':', '') + '00';
+      const arrCompact = (train.arr_time || '00:00').replace(':', '') + '00';
+      const details = encodeURIComponent(
+        `🚆 TimeTrack Rail Journey Plan:\n` +
+        `• Train: ${train.train_number} ${train.train_name}\n` +
+        `• Board: ${train.source} at ${train.dep_time}\n` +
+        `• Arrive: ${train.destination} at ${train.arr_time}\n` +
+        `• Target Venue Deadline: ${deadline}\n` +
+        `• Spare Buffer: ${adjustedSpare} mins\n` +
+        `• Official Booking: https://www.irctc.co.in/nget/train-search`
+      );
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dateCompact}T${depCompact}/${dateCompact}T${arrCompact}&details=${details}`;
+    }
+
+    function shareJourneyPlan(train, deadline, adjustedVenueArr, adjustedSpare) {
+      const statusIcon = adjustedSpare >= 60 ? '🟢 SAFE BUFFER' : (adjustedSpare >= 30 ? '🟡 TIGHT BUFFER' : (adjustedSpare >= 0 ? '🟠 RISKY' : '🔴 MISSED'));
+      const text = `🚆 *TimeTrack Rail Journey Plan*\n` +
+        `Train: ${train.train_number} ${train.train_name}\n` +
+        `Route: ${train.source} (${train.dep_time}) ➔ ${train.destination} (${train.arr_time})\n` +
+        `Reaches Venue: ${adjustedVenueArr} (Target Deadline: ${deadline})\n` +
+        `Buffer Health: ${adjustedSpare >= 0 ? adjustedSpare + ' mins spare (' + statusIcon + ')' : Math.abs(adjustedSpare) + ' mins LATE (' + statusIcon + ')'}\n` +
+        `Book Official: https://www.irctc.co.in/nget/train-search`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('📲 Journey Buffer Plan copied! Ready to share on WhatsApp / SMS.');
+        }).catch(() => {
+          prompt('Copy your journey plan:', text);
+        });
+      } else {
+        prompt('Copy your journey plan:', text);
+      }
+    }
+
     $('plannerForm').onsubmit = async e => {
       e.preventDefault();
       rqSyncTime();
@@ -2189,6 +2626,7 @@
         destination: $('destination').value.trim(),
         journey_date: $('journey_date').value,
         deadline: $('deadline').value,
+        persona: $('selectedPersona').value || 'standard',
         venue_travel_minutes: Number($('venueTravelInput').value) || 0
       };
 
@@ -2207,6 +2645,7 @@
     function renderSearchResults(data, query) {
       const container = $('planResultsContainer');
       container.replaceChildren();
+      lastSearchPayload = { ...data, query };
 
       // 1. AI Recommendation Banner
       const aiBanner = document.createElement('div');
@@ -2221,7 +2660,8 @@
 
       const filterTag = document.createElement('div');
       filterTag.className = 'ai-banner-filter-tag';
-      filterTag.innerHTML = `🛡️ <b>${data.rejected_count} late train(s)</b> filtered out`;
+      const skippedNote = data.skipped_day_count ? ` · ${data.skipped_day_count} non-running` : '';
+      filterTag.innerHTML = `🛡️ <b>${data.rejected_count || 0} late train(s)</b> filtered out${skippedNote}`;
 
       aiHeader.append(aiBadge, filterTag);
 
@@ -2232,10 +2672,6 @@
       aiBanner.append(aiHeader, aiText);
       container.append(aiBanner);
 
-      // 2. Train Cards List
-      const cardsList = document.createElement('div');
-      cardsList.className = 'train-cards-list';
-
       if (!data.trains || data.trains.length === 0) {
         const noTrains = document.createElement('div');
         noTrains.className = 'train-card';
@@ -2243,41 +2679,118 @@
         noTrains.innerHTML = `
           <h4>No Qualifying Trains Arrive Before Your Deadline</h4>
           <p style="color:#6e8296; font-size:14px; margin-top:8px;">
-            All trains from <b>${query.source}</b> to <b>${query.destination}</b> were filtered out because they reach the station too late to cover the ${query.venue_travel_minutes}m journey to your venue before ${query.deadline}.
+            All trains from <b>${query.source}</b> to <b>${query.destination}</b> were filtered out because they reach the station too late to cover the ${data.total_transit_minutes || query.venue_travel_minutes}m journey to your venue before ${query.deadline}.
           </p>
           <p style="font-size:13px; font-weight:700; color:#188673; margin-top:12px;">
-            Tip: Consider travelling the evening before or adjusting your travel buffer.
+            Tip: Consider travelling the evening prior or choosing an earlier departure corridor.
           </p>
         `;
-        cardsList.append(noTrains);
-      } else {
-        data.trains.forEach(train => {
-          const card = document.createElement('div');
-          card.className = 'train-card';
+        container.append(noTrains);
+        return;
+      }
 
-          // Top Info Row
-          const topRow = document.createElement('div');
-          topRow.className = 'train-card-top';
+      // 2. Interactive Delay Stress-Test Simulator Box
+      const simBox = document.createElement('div');
+      simBox.id = 'delaySimulatorBox';
+      simBox.className = 'delay-sim-box';
+      simBox.innerHTML = `
+        <div class="delay-sim-header">
+          <div class="delay-sim-title">
+            <span style="font-size:18px">⚡</span>
+            <div>
+              <strong>Live Delay Stress-Test Simulator</strong>
+              <span class="delay-sim-sub">(Indian Railways NTES Delay Resilience Check)</span>
+            </div>
+          </div>
+          <span id="delayValueBadge" class="delay-badge delay-badge-ontime">
+            +0 mins delay (On Time)
+          </span>
+        </div>
+        <div class="delay-slider-container">
+          <input type="range" id="delaySlider" min="0" max="90" step="5" value="0"
+                 aria-label="Simulate delay in minutes"
+                 oninput="renderFilteredTrainsWithDelay(Number(this.value))" />
+          <div class="delay-ticks">
+            <span>0m (On Time)</span>
+            <span>+30m Minor Delay</span>
+            <span>+60m Heavy Delay</span>
+            <span>+90m Severe Delay</span>
+          </div>
+        </div>
+      `;
+      container.append(simBox);
 
-          const info = document.createElement('div');
-          info.className = 'train-card-info';
-          const title = document.createElement('h4');
-          title.textContent = `${train.train_number} ${train.train_name}`;
-          const meta = document.createElement('div');
-          meta.className = 'train-card-meta';
-          meta.textContent = `${train.days} • Classes: ${(train.classes || []).join(', ')}`;
-          info.append(title, meta);
+      // 3. Dynamic Cards Container
+      const dynamicList = document.createElement('div');
+      dynamicList.id = 'dynamicCardsList';
+      dynamicList.className = 'train-cards-list';
+      container.append(dynamicList);
 
-          const badge = document.createElement('div');
-          badge.className = `risk-badge badge-${train.risk_tag}`;
-          badge.textContent = `${train.risk_tag} • ${train.spare_minutes} mins spare`;
+      // Render initial state (0 mins delay)
+      renderFilteredTrainsWithDelay(0);
+    }
 
-          topRow.append(info, badge);
+    function renderFilteredTrainsWithDelay(delayMins) {
+      if (!lastSearchPayload || !lastSearchPayload.trains) return;
+      const { trains, deadline, journey_date, query, total_transit_minutes } = lastSearchPayload;
+      const transitMins = total_transit_minutes || (query ? query.venue_travel_minutes : 45);
 
-          // Timeline breakdown
-          const timeline = document.createElement('div');
-          timeline.className = 'timeline-bar';
-          timeline.innerHTML = `
+      const badge = $('delayValueBadge');
+      if (badge) {
+        if (delayMins === 0) {
+          badge.className = 'delay-badge delay-badge-ontime';
+          badge.textContent = '+0 mins delay (On Time)';
+        } else if (delayMins <= 30) {
+          badge.className = 'delay-badge delay-badge-delayed';
+          badge.textContent = `+${delayMins} mins simulated delay (Minor)`;
+        } else {
+          badge.className = 'delay-badge delay-badge-severe';
+          badge.textContent = `+${delayMins} mins simulated delay (Heavy)`;
+        }
+      }
+
+      const listContainer = $('dynamicCardsList');
+      if (!listContainer) return;
+      listContainer.replaceChildren();
+
+      trains.forEach(train => {
+        const simArr = addMinutesToHHMM(train.arr_time, delayMins);
+        const simVenueArr = addMinutesToHHMM(train.venue_arrival_time, delayMins);
+        const simSpare = train.spare_minutes - delayMins;
+
+        let riskTag = 'Safe', tagClass = 'Safe';
+        if (simSpare < 0) {
+          riskTag = 'MISSED DEADLINE';
+          tagClass = 'Missed';
+        } else if (simSpare < 30) {
+          riskTag = 'Risky';
+          tagClass = 'Risky';
+        } else if (simSpare < 60) {
+          riskTag = 'Tight';
+          tagClass = 'Tight';
+        }
+
+        const totalSpan = Math.max((train.ride_minutes || 180) + transitMins + Math.max(simSpare, 0), 1);
+        const ridePct = Math.round(((train.ride_minutes || 180) / totalSpan) * 100);
+        const transitPct = Math.round((transitMins / totalSpan) * 100);
+        const sparePct = Math.max(100 - ridePct - transitPct, 0);
+
+        const card = document.createElement('div');
+        card.className = `train-card card-risk-${tagClass}`;
+
+        card.innerHTML = `
+          <div class="train-card-top">
+            <div class="train-card-info">
+              <h4>${train.train_number} • ${train.train_name}</h4>
+              <div class="train-card-meta">${train.days || 'Daily'} • Classes: ${(train.classes || []).join(', ')}</div>
+            </div>
+            <div class="risk-badge badge-${tagClass}">
+              ${riskTag} • ${simSpare >= 0 ? `${simSpare}m spare` : `${Math.abs(simSpare)}m late`}
+            </div>
+          </div>
+
+          <!-- Timeline breakdown -->
+          <div class="timeline-bar">
             <div class="timeline-step">
               <small>Departs Origin</small>
               <strong>${train.dep_time}</strong>
@@ -2286,28 +2799,39 @@
             <div class="timeline-arrow">➔</div>
             <div class="timeline-step">
               <small>Arrives Destination</small>
-              <strong>${train.arr_time}</strong>
+              <strong>${simArr} ${delayMins ? `<em style="color:#eab308;font-size:11px;">(+${delayMins}m)</em>` : ''}</strong>
               <span style="font-size:11px;color:#677d94">${train.destination}</span>
             </div>
             <div class="timeline-arrow">➔</div>
             <div class="timeline-step venue-step">
-              <small>Reaches Venue (+${train.venue_travel_minutes}m transit)</small>
-              <strong>${train.venue_arrival_time}</strong>
-              <span style="font-size:11px;color:#188673">Deadline: ${query.deadline} (${train.spare_minutes}m buffer)</span>
+              <small>Reaches Venue (+${transitMins}m transit)</small>
+              <strong style="${simSpare < 0 ? 'color:#dc2626' : ''}">${simVenueArr}</strong>
+              <span style="font-size:11px;color:${simSpare < 0 ? '#dc2626' : '#188673'}">Deadline: ${deadline} (${simSpare >= 0 ? `${simSpare}m spare` : `${Math.abs(simSpare)}m LATE`})</span>
             </div>
-          `;
+          </div>
 
-          // Buffer Health Visual Meter
-          const bufferMeter = document.createElement('div');
-          bufferMeter.className = 'buffer-meter-wrap';
-          const bufferPct = Math.min(100, Math.max(12, Math.round((train.spare_minutes / 90) * 100)));
-          bufferMeter.innerHTML = `
+          <!-- Visual Buffer Timeline Bar -->
+          <div class="visual-buffer-wrap">
+            <div class="visual-buffer-track">
+              <div class="visual-bar-segment segment-ride" style="width: ${ridePct}%;" title="Train Ride (${train.ride_minutes || 180}m)"></div>
+              <div class="visual-bar-segment segment-transit" style="width: ${transitPct}%;" title="Last-Mile + Buffer (${transitMins}m)"></div>
+              <div class="visual-bar-segment segment-spare-${tagClass}" style="width: ${sparePct}%;" title="Spare Buffer (${Math.max(simSpare, 0)}m)"></div>
+            </div>
+            <div class="visual-buffer-legend">
+              <span>🚆 Train Ride: <b>${train.ride_minutes || 180}m</b></span>
+              <span>🚕 Transfer + Buffer: <b>${transitMins}m</b> &rarr; Venue @ <b>${simVenueArr}</b></span>
+              <span>🏁 Hard Deadline: <b>${deadline}</b></span>
+            </div>
+          </div>
+
+          <!-- Buffer Health Visual Meter -->
+          <div class="buffer-meter-wrap">
             <div class="buffer-meter-header">
-              <span class="buffer-meter-title">🛡️ Buffer Health: <b>${train.spare_minutes} minutes</b> before venue deadline</span>
-              <span class="buffer-meter-status status-${train.risk_tag}">${train.risk_tag} Margin</span>
+              <span class="buffer-meter-title">🛡️ Buffer Health Under ${delayMins}m Delay: <b>${simSpare >= 0 ? `${simSpare} minutes spare` : `${Math.abs(simSpare)} minutes LATE`}</b></span>
+              <span class="buffer-meter-status status-${tagClass}">${riskTag}</span>
             </div>
             <div class="buffer-meter-track">
-              <div class="buffer-meter-fill fill-${train.risk_tag}" style="width: ${bufferPct}%;"></div>
+              <div class="buffer-meter-fill fill-${tagClass}" style="width: ${Math.min(100, Math.max(10, Math.round((simSpare / 90) * 100)))}%;"></div>
             </div>
             <div class="buffer-meter-markers">
               <span>0m (Danger)</span>
@@ -2315,98 +2839,92 @@
               <span>60m (Safe)</span>
               <span>90m+ (Ultra Safe)</span>
             </div>
-          `;
+          </div>
+        `;
 
-          // Station-by-station details
+        // Intermediate stops details
+        if (train.stops && train.stops.length > 0) {
           const details = document.createElement('details');
           details.className = 'stops-details';
           const summary = document.createElement('summary');
-          summary.textContent = `View Station-by-Station Route (${(train.stops || []).length} stops) ▾`;
+          summary.textContent = `View Station-by-Station Route (${train.stops.length} stops) ▾`;
           details.append(summary);
 
-          // Route Stepper Visual
-          if (train.stops && train.stops.length > 0) {
-            const stepper = document.createElement('div');
-            stepper.className = 'route-stepper';
-            stepper.innerHTML = `
-              <div class="route-stepper-title">Intermediate Station Pathway:</div>
-              <div class="stepper-nodes">
-                ${train.stops.map((s, idx, arr) => `
-                  <div class="stepper-node ${idx === 0 ? 'node-start' : (idx === arr.length - 1 ? 'node-end' : '')}">
-                    <div class="node-dot"></div>
-                    <div class="node-station" title="${s.station}">${s.station.split('(')[0].trim()}</div>
-                    <div class="node-time">${s.dep !== 'Ends' ? s.dep : s.arr}</div>
-                  </div>
-                `).join('')}
-              </div>
-            `;
-            details.append(stepper);
+          const stepper = document.createElement('div');
+          stepper.className = 'route-stepper';
+          stepper.innerHTML = `
+            <div class="route-stepper-title">Intermediate Station Pathway:</div>
+            <div class="stepper-nodes">
+              ${train.stops.map((s, idx, arr) => `
+                <div class="stepper-node ${idx === 0 ? 'node-start' : (idx === arr.length - 1 ? 'node-end' : '')}">
+                  <div class="node-dot"></div>
+                  <div class="node-station" title="${s.station}">${(s.station || '').split('(')[0].trim()}</div>
+                  <div class="node-time">${s.dep !== 'Ends' ? s.dep : s.arr}</div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+          details.append(stepper);
 
-            const table = document.createElement('table');
-            table.className = 'stops-table';
-            table.innerHTML = `
-              <thead>
+          const table = document.createElement('table');
+          table.className = 'stops-table';
+          table.innerHTML = `
+            <thead>
+              <tr><th>Station</th><th>Arrival</th><th>Departure</th><th>Day</th></tr>
+            </thead>
+            <tbody>
+              ${train.stops.map(s => `
                 <tr>
-                  <th>Station</th>
-                  <th>Arrival</th>
-                  <th>Departure</th>
-                  <th>Day</th>
+                  <td><b>${s.station}</b></td>
+                  <td>${s.arr}</td>
+                  <td>${s.dep}</td>
+                  <td>Day ${s.day}</td>
                 </tr>
-              </thead>
-              <tbody>
-                ${train.stops.map(s => `
-                  <tr>
-                    <td><b>${s.station}</b></td>
-                    <td>${s.arr}</td>
-                    <td>${s.dep}</td>
-                    <td>Day ${s.day}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            `;
-            details.append(table);
-          }
+              `).join('')}
+            </tbody>
+          `;
+          details.append(table);
+          card.append(details);
+        }
 
-          // Action buttons
-          const actions = document.createElement('div');
-          actions.className = 'card-actions';
+        // Action Buttons Row
+        const actions = document.createElement('div');
+        actions.className = 'card-actions';
 
-          const irctcLink = document.createElement('a');
-          irctcLink.className = 'btn-irctc';
-          irctcLink.href = train.irctc_url || 'https://www.irctc.co.in/nget/train-search';
-          irctcLink.target = '_blank';
-          irctcLink.rel = 'noopener';
-          irctcLink.innerHTML = 'Book on IRCTC ↗';
+        const irctcLink = document.createElement('a');
+        irctcLink.className = 'btn-irctc';
+        irctcLink.href = train.irctc_url || 'https://www.irctc.co.in/nget/train-search';
+        irctcLink.target = '_blank';
+        irctcLink.rel = 'noopener';
+        irctcLink.innerHTML = 'Book on IRCTC ↗';
 
-          const demoBtn = document.createElement('button');
-          demoBtn.type = 'button';
-          demoBtn.className = 'btn-demo-book';
-          demoBtn.innerHTML = 'Select for Demo Booking →';
-          demoBtn.onclick = () => {
-            selectForDemoBooking(train.train_number, train.source, train.destination);
-          };
+        const calLink = document.createElement('a');
+        calLink.className = 'btn-calendar';
+        calLink.href = buildGoogleCalendarUrl(train, journey_date, deadline, simSpare);
+        calLink.target = '_blank';
+        calLink.rel = 'noopener';
+        calLink.innerHTML = '📅 Add to Calendar';
 
-          const copyBtn = document.createElement('button');
-          copyBtn.type = 'button';
-          copyBtn.className = 'btn-copy-itinerary';
-          copyBtn.innerHTML = '📋 Copy Itinerary';
-          copyBtn.onclick = () => {
-            const summaryText = `🚆 TimeTrack Rail Itinerary:\nTrain: ${train.train_number} ${train.train_name}\nDeparture: ${train.source} at ${train.dep_time}\nArrival: ${train.destination} at ${train.arr_time}\nVenue Arrival: ${train.venue_arrival_time} (Deadline: ${query.deadline})\nSafety Margin: ${train.spare_minutes} mins (${train.risk_tag})\nOfficial Booking: https://www.irctc.co.in/nget/train-search`;
-            navigator.clipboard.writeText(summaryText).then(() => {
-              showToast('✅ Itinerary copied to clipboard!');
-            }).catch(() => {
-              showToast('Itinerary ready: ' + train.train_name);
-            });
-          };
+        const shareBtn = document.createElement('button');
+        shareBtn.type = 'button';
+        shareBtn.className = 'btn-share';
+        shareBtn.innerHTML = '📲 Share Buffer Plan';
+        shareBtn.onclick = () => {
+          shareJourneyPlan(train, deadline, simVenueArr, simSpare);
+        };
 
-          actions.append(irctcLink, demoBtn, copyBtn);
+        const demoBtn = document.createElement('button');
+        demoBtn.type = 'button';
+        demoBtn.className = 'btn-demo-book';
+        demoBtn.innerHTML = 'Select for Demo Booking →';
+        demoBtn.onclick = () => {
+          selectForDemoBooking(train.train_number, train.source, train.destination);
+        };
 
-          card.append(topRow, timeline, bufferMeter, details, actions);
-          cardsList.append(card);
-        });
-      }
-
-      container.append(cardsList);
+        actions.append(irctcLink, calLink, shareBtn, demoBtn);
+        card.append(actions);
+        listContainer.append(card);
+      });
     }
 
     /* SELECT FOR DEMO BOOKING */
@@ -2496,14 +3014,20 @@
       ['Pune Jn (PUNE)', 'PUNE', 'Maharashtra'],
       ['Shivajinagar (SVJR)', 'SVJR', 'Maharashtra'],
       ['Mumbai CSMT (CSMT)', 'CSMT', 'Maharashtra'],
+      ['Mumbai Central (MMCT)', 'MMCT', 'Maharashtra'],
       ['Dadar Central (DR)', 'DR', 'Maharashtra'],
+      ['Borivali (BVI)', 'BVI', 'Maharashtra'],
       ['Kalyan Jn (KYN)', 'KYN', 'Maharashtra'],
+      ['Thane (TNA)', 'TNA', 'Maharashtra'],
       ['Lonavala (LNL)', 'LNL', 'Maharashtra'],
       ['Karjat (KJT)', 'KJT', 'Maharashtra'],
       ['New Delhi (NDLS)', 'NDLS', 'Delhi'],
       ['Kanpur Central (CNB)', 'CNB', 'Uttar Pradesh'],
       ['Ghaziabad (GZB)', 'GZB', 'Uttar Pradesh'],
       ['Aligarh Jn (ALJN)', 'ALJN', 'Uttar Pradesh'],
+      ['Kota Jn (KOTA)', 'KOTA', 'Rajasthan'],
+      ['Sawai Madhopur (SWM)', 'SWM', 'Rajasthan'],
+      ['Mathura Jn (MTJ)', 'MTJ', 'Uttar Pradesh'],
       ['KSR Bengaluru (SBC)', 'SBC', 'Karnataka'],
       ['MGR Chennai Central (MAS)', 'MAS', 'Tamil Nadu'],
       ['Katpadi Jn (KPD)', 'KPD', 'Tamil Nadu'],
@@ -2516,13 +3040,17 @@
       ['Cuttack Jn (CTC)', 'CTC', 'Odisha'],
       ['Kharagpur Jn (KGP)', 'KGP', 'West Bengal'],
       ['Balasore (BLS)', 'BLS', 'Odisha'],
-      ['Thane (TNA)', 'TNA', 'Maharashtra'],
-      ['Panvel (PNVL)', 'PNVL', 'Maharashtra'],
-      ['Nagpur Jn (NGP)', 'NGP', 'Maharashtra'],
       ['Ahmedabad Jn (ADI)', 'ADI', 'Gujarat'],
+      ['Vadodara Jn (BRC)', 'BRC', 'Gujarat'],
       ['Surat (ST)', 'ST', 'Gujarat'],
       ['Jaipur Jn (JP)', 'JP', 'Rajasthan'],
+      ['Alwar Jn (AWR)', 'AWR', 'Rajasthan'],
+      ['Gurgaon (GGN)', 'GGN', 'Haryana'],
       ['Secunderabad Jn (SC)', 'SC', 'Telangana'],
+      ['Vijayawada Jn (BZA)', 'BZA', 'Andhra Pradesh'],
+      ['Warangal (WL)', 'WL', 'Telangana'],
+      ['Panvel (PNVL)', 'PNVL', 'Maharashtra'],
+      ['Nagpur Jn (NGP)', 'NGP', 'Maharashtra'],
       ['Lucknow Charbagh (LKO)', 'LKO', 'Uttar Pradesh']
     ];
 
