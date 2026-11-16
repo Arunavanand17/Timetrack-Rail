@@ -1557,7 +1557,7 @@
         <button type="button" onclick="applyQuickPreset('Kota Jn (KOTA)', 'New Delhi (NDLS)', '10:00', 25, 'exam')" class="eval-chip">🎓 Kota &rarr; Delhi (JEE Exam)</button>
         <button type="button" onclick="applyQuickPreset('Patna Jn (PNBE)', 'New Delhi (NDLS)', '09:00', 60, 'interview')" class="eval-chip">📍 Patna &rarr; Delhi</button>
         <button type="button" onclick="applyQuickPreset('Ahmedabad Jn (ADI)', 'Mumbai Central (MMCT)', '22:00', 20)" class="eval-chip">📍 Ahmedabad &rarr; Mumbai</button>
-        <button type="button" onclick="document.getElementById('uspSection').scrollIntoView({behavior:'smooth'})" class="eval-chip usp-chip">💡 Compare USP</button>
+        <button type="button" onclick="document.querySelectorAll('.reveal').forEach(e=>e.classList.add('visible'));document.getElementById('uspSection').scrollIntoView({behavior:'smooth'})" class="eval-chip usp-chip">💡 Compare USP</button>
       </div>
     </div>
   </div>
@@ -1580,7 +1580,7 @@
       <div class="hero-sub">Plan train journeys around your venue deadline instead of departure times. Perfect for exam candidates, interviewees, and patients.</div>
       <div class="hero-actions">
         <button class="btn btn-primary" onclick="showTab('plan')">Plan by Deadline <span>↗</span></button>
-        <button class="btn btn-light" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Why TimeTrack Rail →</button>
+        <button class="btn btn-light" onclick="document.querySelectorAll('.reveal').forEach(e=>e.classList.add('visible'));document.getElementById('features').scrollIntoView({behavior:'smooth'})">Why TimeTrack Rail →</button>
       </div>
       <div class="hero-stats">
         <div><strong>01</strong><small>Venue Deadline</small></div>
@@ -1944,7 +1944,7 @@
     }
 
     const CLIENT_SEED_TRAINS = [
-      # 1. Pune Jn (PUNE) -> Mumbai CSMT (CSMT)
+      // 1. Pune Jn (PUNE) -> Mumbai CSMT (CSMT)
       {
         train_number: "11010", train_name: "Sinhagad Express",
         source_code: "PUNE", source_name: "Pune Jn",
@@ -2009,7 +2009,7 @@
           {code: "CSMT", station: "Mumbai CSMT (CSMT)", arr: "21:05", dep: "Ends", day: 1}
         ]
       },
-      # 2. Mumbai CSMT (CSMT) -> Pune Jn (PUNE)
+      // 2. Mumbai CSMT (CSMT) -> Pune Jn (PUNE)
       {
         train_number: "12127", train_name: "Mumbai - Pune Intercity SF",
         source_code: "CSMT", source_name: "Mumbai CSMT",
@@ -2025,7 +2025,7 @@
           {code: "PUNE", station: "Pune Jn (PUNE)", arr: "09:57", dep: "Ends", day: 1}
         ]
       },
-      # 3. New Delhi (NDLS) -> Kanpur Central (CNB)
+      // 3. New Delhi (NDLS) -> Kanpur Central (CNB)
       {
         train_number: "22436", train_name: "Varanasi Vande Bharat Exp",
         source_code: "NDLS", source_name: "New Delhi",
@@ -2051,7 +2051,7 @@
           {code: "CNB", station: "Kanpur Central (CNB)", arr: "11:20", dep: "Ends", day: 1}
         ]
       },
-      # 4. KSR Bengaluru (SBC) -> MGR Chennai Central (MAS)
+      // 4. KSR Bengaluru (SBC) -> MGR Chennai Central (MAS)
       {
         train_number: "12008", train_name: "MGR Chennai Central Shatabdi",
         source_code: "SBC", source_name: "KSR Bengaluru",
@@ -2078,7 +2078,7 @@
           {code: "MAS", station: "MGR Chennai Central (MAS)", arr: "12:15", dep: "Ends", day: 1}
         ]
       },
-      # 5. Patna Jn (PNBE) -> New Delhi (NDLS)
+      // 5. Patna Jn (PNBE) -> New Delhi (NDLS)
       {
         train_number: "12309", train_name: "Rajendra Nagar Rajdhani Exp",
         source_code: "PNBE", source_name: "Patna Jn",
@@ -2107,7 +2107,7 @@
           {code: "NDLS", station: "New Delhi (NDLS)", arr: "07:55", dep: "Ends", day: 2}
         ]
       },
-      # 6. Howrah Jn (HWH) -> Bhubaneswar (BBS)
+      // 6. Howrah Jn (HWH) -> Bhubaneswar (BBS)
       {
         train_number: "22895", train_name: "Howrah - Puri Vande Bharat",
         source_code: "HWH", source_name: "Howrah Jn",
@@ -2135,7 +2135,7 @@
           {code: "BBS", station: "Bhubaneswar (BBS)", arr: "20:05", dep: "Ends", day: 1}
         ]
       },
-      # 7. Ahmedabad Jn (ADI) -> Mumbai Central (MMCT)
+      // 7. Ahmedabad Jn (ADI) -> Mumbai Central (MMCT)
       {
         train_number: "20902", train_name: "Gandhinagar - Mumbai Vande Bharat",
         source_code: "ADI", source_name: "Ahmedabad Jn",
@@ -2163,7 +2163,7 @@
           {code: "MMCT", station: "Mumbai Central (MMCT)", arr: "21:35", dep: "Ends", day: 1}
         ]
       },
-      # 8. Jaipur Jn (JP) -> New Delhi (NDLS)
+      // 8. Jaipur Jn (JP) -> New Delhi (NDLS)
       {
         train_number: "12016", train_name: "Ajmer - New Delhi Shatabdi",
         source_code: "JP", source_name: "Jaipur Jn",
@@ -2190,7 +2190,7 @@
           {code: "NDLS", station: "New Delhi (NDLS)", arr: "10:30", dep: "Ends", day: 1}
         ]
       },
-      # 9. Secunderabad Jn (SC) -> Vijayawada Jn (BZA)
+      // 9. Secunderabad Jn (SC) -> Vijayawada Jn (BZA)
       {
         train_number: "20707", train_name: "Secunderabad - Visakhapatnam Vande Bharat",
         source_code: "SC", source_name: "Secunderabad Jn",
@@ -2204,7 +2204,7 @@
           {code: "BZA", station: "Vijayawada Jn (BZA)", arr: "08:50", dep: "Ends", day: 1}
         ]
       },
-      # 10. Kota Jn (KOTA) -> New Delhi (NDLS) - JEE/NEET Aspirant Corridor
+      // 10. Kota Jn (KOTA) -> New Delhi (NDLS) - JEE/NEET Aspirant Corridor
       {
         train_number: "12059", train_name: "Kota - Hazrat Nizamuddin Jan Shatabdi",
         source_code: "KOTA", source_name: "Kota Jn",
@@ -3004,8 +3004,12 @@
 
     const observer = new IntersectionObserver(entries => entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
-    }), { threshold: .1 });
+    }), { threshold: .05 });
     document.querySelectorAll('.reveal').forEach(e => observer.observe(e));
+    // Failsafe: guarantee all reveal elements are visible after initial render
+    setTimeout(() => {
+      document.querySelectorAll('.reveal').forEach(e => e.classList.add('visible'));
+    }, 400);
   </script>
 
   <!-- AUTOCOMPLETE STATIONS & THEME -->
